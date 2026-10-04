@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inbox Zero — Triage Simulation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEAE0;
+    --paper-raised:#F7F3EA;
+    --ink:#20281F;
+    --ink-soft:#54594D;
+    --line:#D8D0BE;
+    --rust:#9C3D27;
+    --teal:#2F6F62;
+    --gold:#C98A2B;
+    --slate:#3E5C76;
+    --stone:#8B8578;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:600px;
+    margin:0 auto;
+    padding:22px 18px 60px;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .masthead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:10px;
+    margin-bottom:18px;
+  }
+  .masthead h1{ font-size:26px; }
+  .masthead .sub{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .team-chip{
+    font-size:11px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:4px 9px;
+    border-radius:2px;
+    white-space:nowrap;
+  }
+  .live-dot{
+    display:inline-block;
+    width:6px;height:6px;
+    border-radius:50%;
+    background:var(--teal);
+    margin-right:5px;
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  .landing-card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    padding:22px;
+    margin-bottom:16px;
+  }
+  .landing-card p{ line-height:1.6; font-size:13.5px; color:var(--ink); margin:0 0 12px; }
+  .landing-card p:last-child{ margin-bottom:0; }
+  .btn{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    font-weight:600;
+    border:1.5px solid var(--ink);
+    background:var(--ink);
+    color:var(--paper);
+    padding:11px 18px;
+    cursor:pointer;
+    text-align:center;
+    width:100%;
+    transition:transform .08s ease;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn.secondary{ background:transparent; color:var(--ink); }
+  .btn.small{ width:auto; padding:7px 12px; font-size:11.5px; }
+  .btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .stack{ display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+
+  .tabs{ display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+  .tab{
+    width:30px; height:30px;
+    border:1.5px solid var(--line);
+    background:var(--paper-raised);
+    color:var(--ink-soft);
+    font-size:12px;
+    font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    position:relative;
+  }
+  .tab.current{ border-color:var(--ink); color:var(--ink); }
+  .tab.done::after{
+    content:'';
+    position:absolute;
+    bottom:3px; right:3px;
+    width:5px; height:5px;
+    background:var(--teal);
+    border-radius:50%;
+  }
+
+  .memo{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    position:relative;
+    margin-bottom:16px;
+  }
+  .ribbon{
+    position:absolute;
+    top:-1px; left:16px;
+    transform:translateY(-50%);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    color:#fff;
+    padding:3px 9px;
+  }
+  .memo-body{ padding:26px 18px 18px; }
+  .memo-row{ font-size:12.5px; color:var(--ink-soft); margin-bottom:3px; }
+  .memo-row b{ color:var(--ink); font-weight:600; }
+  .memo-subject{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    font-weight:600;
+    margin:8px 0 12px;
+    line-height:1.3;
+  }
+  .memo-text{ font-size:13.5px; line-height:1.65; white-space:pre-line; margin-bottom:12px; }
+  .memo-box{
+    border-left:3px solid var(--ink-soft);
+    background:rgba(0,0,0,0.03);
+    padding:10px 12px;
+    font-size:12.5px;
+    line-height:1.6;
+    margin-bottom:12px;
+    white-space:pre-line;
+  }
+  .memo-box .label{
+    display:block;
+    font-size:10.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+    letter-spacing:0.03em;
+  }
+  .memo-footer{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:var(--ink-soft);
+    border-top:1px dashed var(--line);
+    padding-top:10px;
+    margin-top:4px;
+  }
+
+  .stamp-row{ display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:14px; }
+  .stamp{
+    border:2px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:14px;
+    padding:13px 6px;
+    cursor:pointer;
+    text-align:center;
+    letter-spacing:0.02em;
+    transform:rotate(-1deg);
+  }
+  .stamp:nth-child(2){ transform:rotate(1deg); }
+  .stamp:nth-child(3){ transform:rotate(1deg); }
+  .stamp:nth-child(4){ transform:rotate(-1deg); }
+  .stamp.active{ color:#fff; transform:rotate(0deg) scale(1.03); }
+
+  textarea{
+    width:100%;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    padding:10px;
+    border:1px solid var(--line);
+    background:#fff;
+    resize:vertical;
+    min-height:76px;
+    margin-bottom:12px;
+    color:var(--ink);
+  }
+  textarea::placeholder{ color:#A39B86; }
+  label.field-label{ display:block; font-size:11px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; }
+
+  .nav-row{ display:flex; gap:8px; }
+  .nav-row .btn{ flex:1; }
+
+  .review-email{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .review-email h3{ font-size:16px; margin-bottom:10px; }
+  .bar-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .bar-label{ width:66px; font-size:10.5px; font-weight:600; flex-shrink:0; }
+  .bar-track{ flex:1; height:14px; background:var(--line); position:relative; }
+  .bar-fill{ height:100%; }
+  .bar-count{ width:20px; font-size:11px; text-align:right; flex-shrink:0; }
+  .suggested-note{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    background:rgba(0,0,0,0.03);
+    border-left:3px solid var(--gold);
+    padding:8px 10px;
+    margin:10px 0;
+    line-height:1.55;
+  }
+  .team-answers{ margin-top:10px; border-top:1px dashed var(--line); padding-top:10px; }
+  .team-answer{ font-size:12px; margin-bottom:8px; line-height:1.55; }
+  .team-answer .who{ font-weight:600; }
+  .chip{
+    display:inline-block;
+    font-size:9.5px;
+    font-weight:600;
+    color:#fff;
+    padding:1px 6px;
+    border-radius:2px;
+    margin-left:6px;
+  }
+  .empty-note{ font-size:12px; color:var(--ink-soft); font-style:italic; }
+  .footer-link{
+    text-align:center;
+    margin-top:22px;
+    font-size:11px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    text-decoration:underline;
+  }
+  .setup-warning{
+    background:#fff3f0;
+    border:1px solid var(--rust);
+    color:var(--rust);
+    padding:14px;
+    font-size:12.5px;
+    line-height:1.6;
+    margin-bottom:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, setDoc, getDocs, deleteDoc, onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ====================================================================
+// 1) PASTE YOUR FIREBASE CONFIG HERE — from Firebase Console >
+//    Project settings > General > Your apps > SDK setup and config.
+// ====================================================================
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDlXxzU0jaJ5rNhRO-F9R33bn-61hWqgSg",
+  authDomain: "inbox-zero-test-3ee18.firebaseapp.com",
+  databaseURL: "https://inbox-zero-test-3ee18-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "inbox-zero-test-3ee18",
+  storageBucket: "inbox-zero-test-3ee18.firebasestorage.app",
+  messagingSenderId: "255410102115",
+  appId: "1:255410102115:web:d5d7aeccf148e8d8687d56",
+  measurementId: "G-K64WXWNYQC"
+};
+const COLLECTION_NAME = "inbox_zero_submissions";
+// ====================================================================
+
+const needsSetup = FIREBASE_CONFIG.apiKey.indexOf('PASTE_') === 0;
+let db = null;
+if(!needsSetup){
+  const app = initializeApp(FIREBASE_CONFIG);
+  db = getFirestore(app);
+}
+
+var EMAILS = [
+  {
+    id:'01', tag:'FYI', tagColor:'var(--stone)',
+    from:'Continuous Improvement', subject:'Weekly CI dashboard',
+    body:"Hi all,\n\nAttached is this week's CI dashboard for reference. No action is required unless you have questions.",
+    est:'—',
+    suggested:'DELETE',
+    meaning:'Remove it from current attention — not necessarily literally destroy the record.'
+  },
+  {
+    id:'02', tag:'MANDATORY', tagColor:'var(--rust)',
+    from:'Your Manager', subject:"Update for my 11am meeting",
+    body:"I'm heading into the management meeting at 11am.\nPlease turn the notes below into a short update I can use.\n\nSend it before 10:45am.",
+    notesLabel:'Notes',
+    notes:[
+      'Customer presentation draft completed yesterday',
+      'Final review still needed before today\u2019s 2pm discussion',
+      'Supplier confirmed revised delivery for Thursday',
+      'Finance confirmation still outstanding',
+      'Amir followed up with Finance this morning',
+      'Yesterday\u2019s team briefing completed — no major issues raised',
+      'Daniel is on leave today'
+    ],
+    task:'Draft 1 short paragraph + 2 bullets.',
+    est:'6–7 min'
+  },
+  {
+    id:'03', tag:'SENIOR', tagColor:'var(--gold)',
+    from:'General Manager', subject:"Highlights for Friday's town hall",
+    body:"I'm preparing Friday's town hall. Could you send me three highlights from your team's work this month?\n\nPlease send them by tomorrow, 12pm.",
+    est:'15–20 min',
+    suggested:'DEFER'
+  },
+  {
+    id:'04', tag:'BLOCKED', tagColor:'var(--slate)',
+    from:'Amir, Planning', subject:'Waiting for your confirmation',
+    body:"Can you confirm whether Version 4 dated 2 October is the latest approved version?\n\nWe're holding our 11am submission until we hear from you.",
+    boxLabel:'Reference',
+    box:'Latest approved version: V4 — 2 Oct',
+    est:'< 1 min',
+    suggested:'DO'
+  },
+  {
+    id:'05', tag:'QUICK HELP', tagColor:'var(--teal)',
+    from:'Daniel, Engineering', subject:'September report',
+    body:"Hi, I'm pulling together some background for a discussion later this week. I remember seeing the September report but can't remember whether you sent it or whether it was on the shared drive.\n\nIf you happen to know where the approved version is, could you send it over when you get a chance?",
+    boxLabel:'Reference',
+    box:'Shared Drive \u2192 Monthly Reports \u2192 September \u2192 Approved',
+    est:'—',
+    suggested:'DELEGATE',
+    meaning:'Point Daniel to the existing source rather than retrieving and sending it yourself — e.g. "The approved September report is in Shared Drive \u2192 Monthly Reports \u2192 September \u2192 Approved." Defer is also defensible depending how strictly you define Delegate. The learning: don\u2019t let a convenience request automatically consume attention.'
+  }
+];
+
+var ACTIONS = [
+  {key:'DELETE', color:'var(--stone)'},
+  {key:'DELEGATE', color:'var(--slate)'},
+  {key:'DO', color:'var(--teal)'},
+  {key:'DEFER', color:'var(--gold)'}
+];
+
+var ADJ = ['Amber','Quiet','Swift','Steady','Brisk','Sharp','Calm','Tidy','Keen','Prompt'];
+var NOUN = ['Falcon','Harbor','Ledger','Compass','Lantern','Anchor','Maple','Cedar','Heron','Pier'];
+
+var state = {
+  screen: 'landing',
+  teamCode: null,
+  currentIdx: 0,
+  answers: {}
+};
+var unsubscribeReview = null;
+
+function makeTeamCode(){
+  var a = ADJ[Math.floor(Math.random()*ADJ.length)];
+  var n = NOUN[Math.floor(Math.random()*NOUN.length)];
+  var num = Math.floor(Math.random()*90+10);
+  return a+' '+n+' '+num;
+}
+function docIdFor(teamCode){
+  return teamCode.replace(/[^a-zA-Z0-9]/g, '-');
+}
+function getHashCode(){
+  var h = decodeURIComponent(window.location.hash.replace('#',''));
+  return h && h.length ? h : null;
+}
+function setHashCode(code){ window.location.hash = encodeURIComponent(code); }
+
+async function saveSubmission(){
+  if(!state.teamCode || !db) return;
+  var record = {
+    teamCode: state.teamCode,
+    answers: state.answers,
+    updatedAt: new Date().toISOString()
+  };
+  try{
+    await setDoc(doc(db, COLLECTION_NAME, docIdFor(state.teamCode)), record, {merge:true});
+  }catch(e){ console.error('save failed', e); alert('Could not save — check your Firebase config and Firestore rules.'); }
+}
+
+function esc(s){
+  var d = document.createElement('div');
+  d.innerText = s;
+  return d.innerHTML;
+}
+
+function render(){
+  if(unsubscribeReview && state.screen!=='review'){ unsubscribeReview(); unsubscribeReview = null; }
+  var app = document.getElementById('app');
+  if(needsSetup){ app.innerHTML = setupHTML(); return; }
+  if(state.screen==='landing') app.innerHTML = landingHTML();
+  else if(state.screen==='play') app.innerHTML = playHTML();
+  else if(state.screen==='done') app.innerHTML = doneHTML();
+  else if(state.screen==='review'){ app.innerHTML = reviewShellHTML(); bindReviewLive(); return; }
+  bindEvents();
+}
+
+function setupHTML(){
+  return masthead('Setup needed') +
+    '<div class="setup-warning"><b>Firebase config missing.</b><br><br>' +
+    'Open this HTML file in a text editor, find the <code>FIREBASE_CONFIG</code> object near the top of the script, and paste in your project\u2019s config values from the Firebase Console (Project settings \u2192 General \u2192 Your apps). Then re-save and reload this page.</div>';
+}
+
+function masthead(sub){
+  return '<div class="masthead"><div><h1>Inbox Zero</h1><div class="sub">'+sub+'</div></div>' +
+    (state.teamCode ? '<div class="team-chip">'+esc(state.teamCode)+'</div>' : '') + '</div>';
+}
+
+function landingHTML(){
+  return masthead('Triage simulation \u00b7 '+EMAILS.length+' emails') +
+    '<div class="landing-card">' +
+      '<p>Six emails are waiting. For each one, make the call: <b>Delete</b>, <b>Delegate</b>, <b>Do</b>, or <b>Defer</b> \u2014 and write what you\u2019d actually send or do.</p>' +
+      '<p>Work alone or with your team on one screen. Everyone\u2019s answers sync live, so the results view updates automatically as teams submit.</p>' +
+    '</div>' +
+    '<div class="stack">' +
+      '<button class="btn" id="btn-start">Start the simulation</button>' +
+      '<button class="btn secondary" id="btn-review">View team results</button>' +
+    '</div>';
+}
+
+function playHTML(){
+  var idx = state.currentIdx;
+  var e = EMAILS[idx];
+  var saved = state.answers[e.id] || {};
+
+  var tabs = '<div class="tabs">';
+  EMAILS.forEach(function(em, i){
+    var cls = 'tab' + (i===idx?' current':'') + (state.answers[em.id] && state.answers[em.id].action ? ' done':'');
+    tabs += '<div class="'+cls+'" data-goto="'+i+'">'+(i+1)+'</div>';
+  });
+  tabs += '</div>';
+
+  var notesHTML = '';
+  if(e.notes){
+    notesHTML = '<div class="memo-box"><span class="label">'+esc(e.notesLabel||'Notes')+'</span>' +
+      e.notes.map(function(n){return '\u2022 '+esc(n);}).join('\n') + '</div>';
+  }
+  var boxHTML = '';
+  if(e.box){
+    boxHTML = '<div class="memo-box"><span class="label">'+esc(e.boxLabel||'Reference')+'</span>'+esc(e.box)+'</div>';
+  }
+  var taskHTML = '';
+  if(e.task){
+    taskHTML = '<div class="memo-box"><span class="label">Your task</span>'+esc(e.task)+'</div>';
+  }
+
+  var stamps = '<div class="stamp-row">';
+  ACTIONS.forEach(function(a){
+    var active = saved.action===a.key;
+    stamps += '<button class="stamp'+(active?' active':'')+'" data-action="'+a.key+'" style="'+(active?('background:'+a.color+';border-color:'+a.color+';'):'')+'">'+a.key+'</button>';
+  });
+  stamps += '</div>';
+
+  var isLast = idx === EMAILS.length-1;
+
+  return masthead('Email '+(idx+1)+' of '+EMAILS.length) +
+    tabs +
+    '<div class="memo">' +
+      '<div class="ribbon" style="background:'+e.tagColor+'">'+esc(e.tag)+'</div>' +
+      '<div class="memo-body">' +
+        '<div class="memo-row"><b>From</b> &nbsp;'+esc(e.from)+'</div>' +
+        '<div class="memo-subject">'+esc(e.subject)+'</div>' +
+        '<div class="memo-text">'+esc(e.body)+'</div>' +
+        notesHTML + boxHTML + taskHTML +
+        '<div class="memo-footer"><span>Est. effort</span><span>'+esc(e.est||'—')+'</span></div>' +
+      '</div>' +
+    '</div>' +
+    '<label class="field-label">Your call</label>' +
+    stamps +
+    '<label class="field-label">What would you write or do? (optional for Delete)</label>' +
+    '<textarea id="response-text" placeholder="Draft your reply, task note, or delegation message…">'+esc(saved.response||'')+'</textarea>' +
+    '<div class="nav-row">' +
+      (idx>0 ? '<button class="btn secondary" id="btn-back">Back</button>' : '') +
+      '<button class="btn" id="btn-next">'+(isLast?'Finish':'Save & next')+'</button>' +
+    '</div>';
+}
+
+function doneHTML(){
+  var count = Object.keys(state.answers).filter(function(k){return state.answers[k].action;}).length;
+  return masthead('All '+EMAILS.length+' emails triaged') +
+    '<div class="landing-card">' +
+      '<p>Nice work, <b>'+esc(state.teamCode)+'</b>. You made a call on '+count+' of '+EMAILS.length+' emails. Your answers are saved and synced to the group.</p>' +
+      '<p>Open the results view any time to see how every team triaged the same inbox — it updates live.</p>' +
+    '</div>' +
+    '<div class="stack">' +
+      '<button class="btn" id="btn-review">View team results</button>' +
+      '<button class="btn secondary" id="btn-edit">Review / edit my answers</button>' +
+    '</div>';
+}
+
+function reviewShellHTML(){
+  return masthead('<span class="live-dot"></span>Results \u00b7 live') + '<div id="review-body"><p class="empty-note">Loading…</p></div>';
+}
+
+function bindReviewLive(){
+  if(!db) return;
+  var bodyEl = document.getElementById('review-body');
+  unsubscribeReview = onSnapshot(collection(db, COLLECTION_NAME), function(snapshot){
+    var all = [];
+    snapshot.forEach(function(d){ all.push(d.data()); });
+    bodyEl.innerHTML = reviewBodyHTML(all);
+    var homeBtn = document.getElementById('btn-home');
+    if(homeBtn) homeBtn.onclick = function(){ state.screen='landing'; render(); };
+    var resetBtn = document.getElementById('btn-reset');
+    if(resetBtn) resetBtn.onclick = async function(){
+      if(!confirm('This clears every team\u2019s submitted answers. Continue?')) return;
+      try{
+        var snap = await getDocs(collection(db, COLLECTION_NAME));
+        var deletes = [];
+        snap.forEach(function(d){ deletes.push(deleteDoc(doc(db, COLLECTION_NAME, d.id))); });
+        await Promise.all(deletes);
+      }catch(e){ console.error(e); }
+    };
+  }, function(err){
+    bodyEl.innerHTML = '<p class="empty-note">Could not load results: '+esc(err.message)+'. Check your Firestore security rules allow read access.</p>';
+  });
+}
+
+function reviewBodyHTML(all){
+  var html = '';
+  if(all.length===0){
+    html += '<div class="landing-card"><p class="empty-note">No teams have submitted yet. Once teams start the simulation and make their calls, results will appear here automatically.</p></div>';
+  } else {
+    EMAILS.forEach(function(e){
+      var counts = {DELETE:0,DELEGATE:0,DO:0,DEFER:0};
+      var responders = [];
+      all.forEach(function(sub){
+        var a = sub.answers && sub.answers[e.id];
+        if(a && a.action){
+          counts[a.action] = (counts[a.action]||0)+1;
+          responders.push({team:sub.teamCode, action:a.action, response:a.response});
+        }
+      });
+      var totalAnswered = responders.length;
+
+      html += '<div class="review-email">';
+      html += '<h3>'+e.id+' \u2014 '+esc(e.subject)+'</h3>';
+
+      ACTIONS.forEach(function(a){
+        var c = counts[a.key]||0;
+        var pct = totalAnswered>0 ? Math.round((c/totalAnswered)*100) : 0;
+        html += '<div class="bar-row"><span class="bar-label">'+a.key+'</span>' +
+          '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+a.color+'"></div></div>' +
+          '<span class="bar-count">'+c+'</span></div>';
+      });
+
+      if(e.suggested){
+        html += '<div class="suggested-note"><b>Suggested: '+esc(e.suggested)+'.</b> '+(e.meaning?esc(e.meaning):'')+'</div>';
+      }
+
+      if(responders.length){
+        html += '<div class="team-answers">';
+        responders.forEach(function(r){
+          var colorMap = {}; ACTIONS.forEach(function(a){colorMap[a.key]=a.color;});
+          html += '<div class="team-answer"><span class="who">'+esc(r.team)+'</span>' +
+            '<span class="chip" style="background:'+(colorMap[r.action]||'#999')+'">'+esc(r.action)+'</span>' +
+            (r.response ? '<div style="margin-top:3px;">'+esc(r.response)+'</div>' : '') +
+            '</div>';
+        });
+        html += '</div>';
+      } else {
+        html += '<p class="empty-note">No team has answered this one yet.</p>';
+      }
+
+      html += '</div>';
+    });
+  }
+
+  html += '<div class="stack"><button class="btn secondary" id="btn-home">Back to start</button></div>';
+  html += '<div class="footer-link" id="btn-reset">Reset all submissions (facilitator)</div>';
+  return html;
+}
+
+function bindEvents(){
+  var el;
+  if(el = document.getElementById('btn-start')){
+    el.onclick = function(){
+      var existing = getHashCode();
+      state.teamCode = existing || makeTeamCode();
+      setHashCode(state.teamCode);
+      state.screen='play';
+      state.currentIdx=0;
+      render();
+    };
+  }
+  if(el = document.getElementById('btn-review')){
+    el.onclick = function(){ state.screen='review'; render(); };
+  }
+  if(el = document.getElementById('btn-edit')){
+    el.onclick = function(){ state.screen='play'; state.currentIdx=0; render(); };
+  }
+  document.querySelectorAll('.stamp').forEach(function(s){
+    s.onclick = function(){
+      var e = EMAILS[state.currentIdx];
+      if(!state.answers[e.id]) state.answers[e.id] = {};
+      state.answers[e.id].action = s.getAttribute('data-action');
+      render();
+    };
+  });
+  document.querySelectorAll('[data-goto]').forEach(function(t){
+    t.onclick = function(){
+      saveCurrentResponse();
+      state.currentIdx = parseInt(t.getAttribute('data-goto'),10);
+      render();
+    };
+  });
+  if(el = document.getElementById('btn-back')){
+    el.onclick = function(){
+      saveCurrentResponse();
+      state.currentIdx = Math.max(0, state.currentIdx-1);
+      render();
+    };
+  }
+  if(el = document.getElementById('btn-next')){
+    el.onclick = async function(){
+      saveCurrentResponse();
+      await saveSubmission();
+      if(state.currentIdx < EMAILS.length-1){
+        state.currentIdx++;
+        render();
+      } else {
+        state.screen='done';
+        render();
+      }
+    };
+  }
+}
+
+function saveCurrentResponse(){
+  var e = EMAILS[state.currentIdx];
+  var ta = document.getElementById('response-text');
+  if(!state.answers[e.id]) state.answers[e.id] = {};
+  if(ta) state.answers[e.id].response = ta.value;
+}
+
+var resumeCode = getHashCode();
+if(resumeCode){ state.teamCode = resumeCode; }
+
+render();
+</script>
+</body>
+</html>
