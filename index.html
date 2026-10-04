@@ -386,16 +386,39 @@ function getHashCode(){
 }
 function setHashCode(code){ window.location.hash = encodeURIComponent(code); }
 
-async function saveSubmission(){
-  if(!state.teamCode || !db) return;
+function setSyncStatus(text, isError){
+  var el = document.getElementById('sync-status');
+  if(!el) return;
+  el.textContent = text;
+  el.style.color = isError ? 'var(--rust)' : 'var(--ink-soft)';
+}
+
+function saveSubmission(){
+  // Fire-and-forget: never block navigation on the network call.
+  if(!state.teamCode || !db) return Promise.resolve();
   var record = {
     teamCode: state.teamCode,
-    answers: state.answers,
+    answers: JSON.parse(JSON.stringify(state.answers)),
     updatedAt: new Date().toISOString()
   };
-  try{
-    await setDoc(doc(db, COLLECTION_NAME, docIdFor(state.teamCode)), record, {merge:true});
-  }catch(e){ console.error('save failed', e); alert('Could not save — check your Firebase config and Firestore rules.'); }
+  setSyncStatus('Saving…', false);
+  var p = setDoc(doc(db, COLLECTION_NAME, docIdFor(state.teamCode)), record, {merge:true});
+  // Guard against a write that silently hangs (blocked request, offline, etc).
+  var timedOut = false;
+  var timer = setTimeout(function(){
+    timedOut = true;
+    setSyncStatus('Still trying to sync… check your connection', true);
+  }, 6000);
+  p.then(function(){
+    clearTimeout(timer);
+    if(!timedOut) setSyncStatus('Synced ✓', false);
+    else setSyncStatus('Synced ✓ (slow connection)', false);
+  }).catch(function(e){
+    clearTimeout(timer);
+    console.error('save failed', e);
+    setSyncStatus('Save failed — check Firestore rules/config', true);
+  });
+  return p;
 }
 
 function esc(s){
@@ -422,7 +445,8 @@ function setupHTML(){
 }
 
 function masthead(sub){
-  return '<div class="masthead"><div><h1>Inbox Zero</h1><div class="sub">'+sub+'</div></div>' +
+  return '<div class="masthead"><div><h1>Inbox Zero</h1><div class="sub">'+sub+'</div>' +
+    (state.teamCode ? '<div class="sub" id="sync-status" style="margin-top:2px;"></div>' : '') + '</div>' +
     (state.teamCode ? '<div class="team-chip">'+esc(state.teamCode)+'</div>' : '') + '</div>';
 }
 
@@ -632,9 +656,9 @@ function bindEvents(){
     };
   }
   if(el = document.getElementById('btn-next')){
-    el.onclick = async function(){
+    el.onclick = function(){
       saveCurrentResponse();
-      await saveSubmission();
+      saveSubmission(); // not awaited — runs in background, status shown via sync-status
       if(state.currentIdx < EMAILS.length-1){
         state.currentIdx++;
         render();
