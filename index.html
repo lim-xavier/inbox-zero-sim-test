@@ -28,167 +28,75 @@
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
   }
-  .wrap{
-    max-width:600px;
-    margin:0 auto;
-    padding:22px 18px 60px;
-  }
-  h1,h2,h3{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    margin:0;
-    letter-spacing:-0.01em;
-  }
+  .wrap{ max-width:600px; margin:0 auto; padding:22px 18px 60px; }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; margin:0; letter-spacing:-0.01em; }
   .masthead{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    border-bottom:2px solid var(--ink);
-    padding-bottom:10px;
-    margin-bottom:18px;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:2px solid var(--ink); padding-bottom:10px; margin-bottom:14px;
   }
   .masthead h1{ font-size:26px; }
-  .masthead .sub{
-    font-size:11px;
-    color:var(--ink-soft);
-    margin-top:2px;
-  }
-  .team-chip{
-    font-size:11px;
-    background:var(--ink);
-    color:var(--paper);
-    padding:4px 9px;
-    border-radius:2px;
-    white-space:nowrap;
-  }
-  .live-dot{
-    display:inline-block;
-    width:6px;height:6px;
-    border-radius:50%;
-    background:var(--teal);
-    margin-right:5px;
-    animation:pulse 1.6s infinite;
-  }
+  .masthead .sub{ font-size:11px; color:var(--ink-soft); margin-top:2px; }
+  .team-chip{ font-size:11px; background:var(--ink); color:var(--paper); padding:4px 9px; border-radius:2px; white-space:nowrap; }
+  .live-dot{ display:inline-block; width:6px;height:6px; border-radius:50%; background:var(--teal); margin-right:5px; animation:pulse 1.6s infinite; }
   @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
-  .landing-card{
-    background:var(--paper-raised);
-    border:1px solid var(--line);
-    padding:22px;
-    margin-bottom:16px;
-  }
+  .progress-line{ font-size:11px; color:var(--ink-soft); margin-bottom:14px; }
+
+  .landing-card{ background:var(--paper-raised); border:1px solid var(--line); padding:22px; margin-bottom:16px; }
   .landing-card p{ line-height:1.6; font-size:13.5px; color:var(--ink); margin:0 0 12px; }
   .landing-card p:last-child{ margin-bottom:0; }
   .btn{
-    display:inline-block;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    font-weight:600;
-    border:1.5px solid var(--ink);
-    background:var(--ink);
-    color:var(--paper);
-    padding:11px 18px;
-    cursor:pointer;
-    text-align:center;
-    width:100%;
-    transition:transform .08s ease;
+    display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:13px; font-weight:600;
+    border:1.5px solid var(--ink); background:var(--ink); color:var(--paper);
+    padding:11px 18px; cursor:pointer; text-align:center; width:100%; transition:transform .08s ease;
   }
   .btn:active{ transform:scale(0.98); }
   .btn.secondary{ background:transparent; color:var(--ink); }
-  .btn.small{ width:auto; padding:7px 12px; font-size:11.5px; }
   .btn:disabled{ opacity:0.35; cursor:not-allowed; }
   .stack{ display:flex; flex-direction:column; gap:10px; margin-top:16px; }
 
-  .tabs{ display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
-  .tab{
-    width:30px; height:30px;
-    border:1.5px solid var(--line);
-    background:var(--paper-raised);
-    color:var(--ink-soft);
-    font-size:12px;
-    font-weight:600;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-    position:relative;
-  }
-  .tab.current{ border-color:var(--ink); color:var(--ink); }
-  .tab.done::after{
-    content:'';
-    position:absolute;
-    bottom:3px; right:3px;
-    width:5px; height:5px;
-    background:var(--teal);
-    border-radius:50%;
+  .new-mail-banner{
+    background:var(--teal); color:#fff; padding:10px 14px; font-size:12.5px; font-weight:600;
+    text-align:center; margin-bottom:14px;
   }
 
-  .memo{
-    background:var(--paper-raised);
-    border:1px solid var(--line);
-    position:relative;
-    margin-bottom:16px;
-  }
+  .inbox-list{ border:1px solid var(--line); background:var(--paper-raised); margin-bottom:16px; }
+  .inbox-row{ display:flex; gap:10px; padding:13px 14px; border-bottom:1px solid var(--line); cursor:pointer; }
+  .inbox-row:last-child{ border-bottom:none; }
+  .inbox-row:hover{ background:rgba(0,0,0,0.025); }
+  .inbox-row.handled{ opacity:0.55; }
+  .inbox-row .dot{ width:8px; height:8px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+  .inbox-row .meta{ flex:1; min-width:0; }
+  .row-top{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px; color:var(--ink-soft); }
+  .row-subject{ font-family:'Fraunces',serif; font-weight:600; font-size:14.5px; margin-top:2px; }
+  .row-preview{ font-size:12px; color:var(--ink-soft); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row-chip{ font-size:9px; font-weight:600; color:#fff; padding:1px 6px; border-radius:2px; flex-shrink:0; align-self:flex-start; }
+  .locked-row{ padding:18px 14px; text-align:center; font-size:12px; color:var(--ink-soft); font-style:italic; background:rgba(0,0,0,0.015); }
+
+  .detail-back{ font-size:12px; color:var(--ink-soft); text-decoration:underline; cursor:pointer; margin-bottom:12px; display:inline-block; background:none; border:none; font-family:'IBM Plex Mono',monospace; padding:0; }
+
+  .memo{ background:var(--paper-raised); border:1px solid var(--line); position:relative; margin-bottom:16px; }
   .ribbon{
-    position:absolute;
-    top:-1px; left:16px;
-    transform:translateY(-50%);
-    font-family:'IBM Plex Mono', monospace;
-    font-size:10.5px;
-    font-weight:600;
-    letter-spacing:0.04em;
-    color:#fff;
-    padding:3px 9px;
+    position:absolute; top:-1px; left:16px; transform:translateY(-50%);
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:600; letter-spacing:0.04em; color:#fff; padding:3px 9px;
   }
   .memo-body{ padding:26px 18px 18px; }
   .memo-row{ font-size:12.5px; color:var(--ink-soft); margin-bottom:3px; }
   .memo-row b{ color:var(--ink); font-weight:600; }
-  .memo-subject{
-    font-family:'Fraunces', serif;
-    font-size:19px;
-    font-weight:600;
-    margin:8px 0 12px;
-    line-height:1.3;
-  }
+  .memo-subject{ font-family:'Fraunces', serif; font-size:19px; font-weight:600; margin:8px 0 12px; line-height:1.3; }
   .memo-text{ font-size:13.5px; line-height:1.65; white-space:pre-line; margin-bottom:12px; }
   .memo-box{
-    border-left:3px solid var(--ink-soft);
-    background:rgba(0,0,0,0.03);
-    padding:10px 12px;
-    font-size:12.5px;
-    line-height:1.6;
-    margin-bottom:12px;
-    white-space:pre-line;
+    border-left:3px solid var(--ink-soft); background:rgba(0,0,0,0.03); padding:10px 12px;
+    font-size:12.5px; line-height:1.6; margin-bottom:12px; white-space:pre-line;
   }
-  .memo-box .label{
-    display:block;
-    font-size:10.5px;
-    font-weight:600;
-    color:var(--ink-soft);
-    margin-bottom:4px;
-    letter-spacing:0.03em;
-  }
-  .memo-footer{
-    display:flex;
-    justify-content:space-between;
-    font-size:11px;
-    color:var(--ink-soft);
-    border-top:1px dashed var(--line);
-    padding-top:10px;
-    margin-top:4px;
-  }
+  .memo-box .label{ display:block; font-size:10.5px; font-weight:600; color:var(--ink-soft); margin-bottom:4px; letter-spacing:0.03em; }
+  .memo-footer{ display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); border-top:1px dashed var(--line); padding-top:10px; margin-top:4px; }
 
   .stamp-row{ display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:14px; }
   .stamp{
-    border:2px solid var(--ink);
-    background:transparent;
-    color:var(--ink);
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:14px;
-    padding:13px 6px;
-    cursor:pointer;
-    text-align:center;
-    letter-spacing:0.02em;
-    transform:rotate(-1deg);
+    border:2px solid var(--ink); background:transparent; color:var(--ink);
+    font-family:'Fraunces', serif; font-weight:600; font-size:14px; padding:13px 6px; cursor:pointer;
+    text-align:center; letter-spacing:0.02em; transform:rotate(-1deg);
   }
   .stamp:nth-child(2){ transform:rotate(1deg); }
   .stamp:nth-child(3){ transform:rotate(1deg); }
@@ -196,29 +104,17 @@
   .stamp.active{ color:#fff; transform:rotate(0deg) scale(1.03); }
 
   textarea{
-    width:100%;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    padding:10px;
-    border:1px solid var(--line);
-    background:#fff;
-    resize:vertical;
-    min-height:76px;
-    margin-bottom:12px;
-    color:var(--ink);
+    width:100%; font-family:'IBM Plex Mono', monospace; font-size:13px; padding:10px;
+    border:1px solid var(--line); background:#fff; resize:vertical; min-height:76px; margin-bottom:12px; color:var(--ink);
   }
   textarea::placeholder{ color:#A39B86; }
   label.field-label{ display:block; font-size:11px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; }
+  .required-mark{ color:var(--rust); }
 
   .nav-row{ display:flex; gap:8px; }
   .nav-row .btn{ flex:1; }
 
-  .review-email{
-    background:var(--paper-raised);
-    border:1px solid var(--line);
-    padding:16px;
-    margin-bottom:14px;
-  }
+  .review-email{ background:var(--paper-raised); border:1px solid var(--line); padding:16px; margin-bottom:14px; }
   .review-email h3{ font-size:16px; margin-bottom:10px; }
   .bar-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
   .bar-label{ width:66px; font-size:10.5px; font-weight:600; flex-shrink:0; }
@@ -226,44 +122,17 @@
   .bar-fill{ height:100%; }
   .bar-count{ width:20px; font-size:11px; text-align:right; flex-shrink:0; }
   .suggested-note{
-    font-size:11.5px;
-    color:var(--ink-soft);
-    background:rgba(0,0,0,0.03);
-    border-left:3px solid var(--gold);
-    padding:8px 10px;
-    margin:10px 0;
-    line-height:1.55;
+    font-size:11.5px; color:var(--ink-soft); background:rgba(0,0,0,0.03);
+    border-left:3px solid var(--gold); padding:8px 10px; margin:10px 0; line-height:1.55;
   }
   .team-answers{ margin-top:10px; border-top:1px dashed var(--line); padding-top:10px; }
   .team-answer{ font-size:12px; margin-bottom:8px; line-height:1.55; }
   .team-answer .who{ font-weight:600; }
-  .chip{
-    display:inline-block;
-    font-size:9.5px;
-    font-weight:600;
-    color:#fff;
-    padding:1px 6px;
-    border-radius:2px;
-    margin-left:6px;
-  }
+  .chip{ display:inline-block; font-size:9.5px; font-weight:600; color:#fff; padding:1px 6px; border-radius:2px; margin-left:6px; }
   .empty-note{ font-size:12px; color:var(--ink-soft); font-style:italic; }
-  .footer-link{
-    text-align:center;
-    margin-top:22px;
-    font-size:11px;
-    color:var(--ink-soft);
-    cursor:pointer;
-    text-decoration:underline;
-  }
-  .setup-warning{
-    background:#fff3f0;
-    border:1px solid var(--rust);
-    color:var(--rust);
-    padding:14px;
-    font-size:12.5px;
-    line-height:1.6;
-    margin-bottom:16px;
-  }
+  .footer-link{ text-align:center; margin-top:22px; font-size:11px; color:var(--ink-soft); cursor:pointer; text-decoration:underline; }
+  .facilitator-link{ text-align:center; font-size:10px; color:var(--ink-soft); opacity:0.55; text-decoration:underline; cursor:pointer; margin-top:34px; }
+  .setup-warning{ background:#fff3f0; border:1px solid var(--rust); color:var(--rust); padding:14px; font-size:12.5px; line-height:1.6; margin-bottom:16px; }
 </style>
 </head>
 <body>
@@ -272,7 +141,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, doc, setDoc, getDocs, deleteDoc, onSnapshot
+  getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ====================================================================
@@ -282,14 +151,16 @@ import {
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDlXxzU0jaJ5rNhRO-F9R33bn-61hWqgSg",
   authDomain: "inbox-zero-test-3ee18.firebaseapp.com",
-  databaseURL: "https://inbox-zero-test-3ee18-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "inbox-zero-test-3ee18",
   storageBucket: "inbox-zero-test-3ee18.firebasestorage.app",
   messagingSenderId: "255410102115",
-  appId: "1:255410102115:web:d5d7aeccf148e8d8687d56",
-  measurementId: "G-K64WXWNYQC"
+  appId: "1:255410102115:web:d5d7aeccf148e8d8687d56"
 };
 const COLLECTION_NAME = "inbox_zero_submissions";
+
+// 2) Set a passcode facilitators will enter to see results / reset data.
+//    Change this to anything you like before sharing the file.
+const FACILITATOR_CODE = "FACI2026";
 // ====================================================================
 
 const needsSetup = FIREBASE_CONFIG.apiKey.indexOf('PASTE_') === 0;
@@ -299,9 +170,13 @@ if(!needsSetup){
   db = getFirestore(app);
 }
 
+// Emails arrive in batches — the next batch unlocks only once every email
+// in the current batch has been given an action. Sizes are configurable:
+var BATCH_SIZES = [2, 6, 6, 6];
+
 var EMAILS = [
   {
-    id:'01', tag:'FYI', tagColor:'var(--stone)',
+    id:'01', tag:'FYI', tagColor:'var(--stone)', time:'8:02 AM',
     from:'Continuous Improvement', subject:'Weekly CI dashboard',
     body:"Hi all,\n\nAttached is this week's CI dashboard for reference. No action is required unless you have questions.",
     est:'—',
@@ -309,7 +184,7 @@ var EMAILS = [
     meaning:'Remove it from current attention — not necessarily literally destroy the record.'
   },
   {
-    id:'02', tag:'MANDATORY', tagColor:'var(--rust)',
+    id:'02', tag:'MANDATORY', tagColor:'var(--rust)', time:'9:52 AM',
     from:'Your Manager', subject:"Update for my 11am meeting",
     body:"I'm heading into the management meeting at 11am.\nPlease turn the notes below into a short update I can use.\n\nSend it before 10:45am.",
     notesLabel:'Notes',
@@ -323,17 +198,18 @@ var EMAILS = [
       'Daniel is on leave today'
     ],
     task:'Draft 1 short paragraph + 2 bullets.',
-    est:'6–7 min'
+    est:'6–7 min',
+    requiresResponse:true
   },
   {
-    id:'03', tag:'SENIOR', tagColor:'var(--gold)',
+    id:'03', tag:'SENIOR', tagColor:'var(--gold)', time:'8:40 AM',
     from:'General Manager', subject:"Highlights for Friday's town hall",
     body:"I'm preparing Friday's town hall. Could you send me three highlights from your team's work this month?\n\nPlease send them by tomorrow, 12pm.",
     est:'15–20 min',
     suggested:'DEFER'
   },
   {
-    id:'04', tag:'BLOCKED', tagColor:'var(--slate)',
+    id:'04', tag:'BLOCKED', tagColor:'var(--slate)', time:'10:18 AM',
     from:'Amir, Planning', subject:'Waiting for your confirmation',
     body:"Can you confirm whether Version 4 dated 2 October is the latest approved version?\n\nWe're holding our 11am submission until we hear from you.",
     boxLabel:'Reference',
@@ -342,7 +218,7 @@ var EMAILS = [
     suggested:'DO'
   },
   {
-    id:'05', tag:'QUICK HELP', tagColor:'var(--teal)',
+    id:'05', tag:'QUICK HELP', tagColor:'var(--teal)', time:'10:05 AM',
     from:'Daniel, Engineering', subject:'September report',
     body:"Hi, I'm pulling together some background for a discussion later this week. I remember seeing the September report but can't remember whether you sent it or whether it was on the shared drive.\n\nIf you happen to know where the approved version is, could you send it over when you get a chance?",
     boxLabel:'Reference',
@@ -364,10 +240,12 @@ var ADJ = ['Amber','Quiet','Swift','Steady','Brisk','Sharp','Calm','Tidy','Keen'
 var NOUN = ['Falcon','Harbor','Ledger','Compass','Lantern','Anchor','Maple','Cedar','Heron','Pier'];
 
 var state = {
-  screen: 'landing',
+  screen: 'landing', // landing | inbox | detail | done | review
   teamCode: null,
-  currentIdx: 0,
-  answers: {}
+  openId: null,
+  answers: {},
+  unlockedCount: BATCH_SIZES[0],
+  unlockBanner: 0 // number of newly-unlocked emails to announce, shown once
 };
 var unsubscribeReview = null;
 
@@ -377,9 +255,7 @@ function makeTeamCode(){
   var num = Math.floor(Math.random()*90+10);
   return a+' '+n+' '+num;
 }
-function docIdFor(teamCode){
-  return teamCode.replace(/[^a-zA-Z0-9]/g, '-');
-}
+function docIdFor(teamCode){ return teamCode.replace(/[^a-zA-Z0-9]/g, '-'); }
 function getHashCode(){
   var h = decodeURIComponent(window.location.hash.replace('#',''));
   return h && h.length ? h : null;
@@ -394,25 +270,20 @@ function setSyncStatus(text, isError){
 }
 
 function saveSubmission(){
-  // Fire-and-forget: never block navigation on the network call.
   if(!state.teamCode || !db) return Promise.resolve();
   var record = {
     teamCode: state.teamCode,
     answers: JSON.parse(JSON.stringify(state.answers)),
+    unlockedCount: state.unlockedCount,
     updatedAt: new Date().toISOString()
   };
   setSyncStatus('Saving…', false);
   var p = setDoc(doc(db, COLLECTION_NAME, docIdFor(state.teamCode)), record, {merge:true});
-  // Guard against a write that silently hangs (blocked request, offline, etc).
   var timedOut = false;
-  var timer = setTimeout(function(){
-    timedOut = true;
-    setSyncStatus('Still trying to sync… check your connection', true);
-  }, 6000);
+  var timer = setTimeout(function(){ timedOut = true; setSyncStatus('Still trying to sync… check your connection', true); }, 6000);
   p.then(function(){
     clearTimeout(timer);
-    if(!timedOut) setSyncStatus('Synced ✓', false);
-    else setSyncStatus('Synced ✓ (slow connection)', false);
+    setSyncStatus(timedOut ? 'Synced ✓ (slow connection)' : 'Synced ✓', false);
   }).catch(function(e){
     clearTimeout(timer);
     console.error('save failed', e);
@@ -427,12 +298,35 @@ function esc(s){
   return d.innerHTML;
 }
 
+function allHandledThrough(n){
+  for(var i=0;i<n;i++){
+    var a = state.answers[EMAILS[i].id];
+    if(!a || !a.action) return false;
+  }
+  return true;
+}
+
+// Returns number of newly unlocked emails (0 if none)
+function maybeUnlockNext(){
+  if(state.unlockedCount >= EMAILS.length) return 0;
+  if(!allHandledThrough(state.unlockedCount)) return 0;
+  var cum = 0, newCount = state.unlockedCount;
+  for(var i=0;i<BATCH_SIZES.length;i++){
+    cum += BATCH_SIZES[i];
+    if(cum > state.unlockedCount){ newCount = Math.min(cum, EMAILS.length); break; }
+  }
+  var gained = newCount - state.unlockedCount;
+  if(gained > 0) state.unlockedCount = newCount;
+  return gained;
+}
+
 function render(){
   if(unsubscribeReview && state.screen!=='review'){ unsubscribeReview(); unsubscribeReview = null; }
   var app = document.getElementById('app');
   if(needsSetup){ app.innerHTML = setupHTML(); return; }
   if(state.screen==='landing') app.innerHTML = landingHTML();
-  else if(state.screen==='play') app.innerHTML = playHTML();
+  else if(state.screen==='inbox') app.innerHTML = inboxHTML();
+  else if(state.screen==='detail') app.innerHTML = detailHTML();
   else if(state.screen==='done') app.innerHTML = doneHTML();
   else if(state.screen==='review'){ app.innerHTML = reviewShellHTML(); bindReviewLive(); return; }
   bindEvents();
@@ -441,7 +335,7 @@ function render(){
 function setupHTML(){
   return masthead('Setup needed') +
     '<div class="setup-warning"><b>Firebase config missing.</b><br><br>' +
-    'Open this HTML file in a text editor, find the <code>FIREBASE_CONFIG</code> object near the top of the script, and paste in your project\u2019s config values from the Firebase Console (Project settings \u2192 General \u2192 Your apps). Then re-save and reload this page.</div>';
+    'Open this HTML file in a text editor, find the <code>FIREBASE_CONFIG</code> object near the top of the script, and paste in your project\u2019s config values from the Firebase Console. Then re-save and reload this page.</div>';
 }
 
 function masthead(sub){
@@ -453,40 +347,59 @@ function masthead(sub){
 function landingHTML(){
   return masthead('Triage simulation \u00b7 '+EMAILS.length+' emails') +
     '<div class="landing-card">' +
-      '<p>Six emails are waiting. For each one, make the call: <b>Delete</b>, <b>Delegate</b>, <b>Do</b>, or <b>Defer</b> \u2014 and write what you\u2019d actually send or do.</p>' +
-      '<p>Work alone or with your team on one screen. Everyone\u2019s answers sync live, so the results view updates automatically as teams submit.</p>' +
+      '<p>Your mailbox will fill up in batches. For each email that lands, make the call: <b>Delete</b>, <b>Delegate</b>, <b>Do</b>, or <b>Defer</b>. The next batch arrives once you\u2019ve handled every email currently in your inbox.</p>' +
+      '<p>Only emails marked as requiring a written response will ask you to type something \u2014 otherwise, just make your call and move on.</p>' +
     '</div>' +
-    '<div class="stack">' +
-      '<button class="btn" id="btn-start">Start the simulation</button>' +
-      '<button class="btn secondary" id="btn-review">View team results</button>' +
-    '</div>';
+    '<div class="stack"><button class="btn" id="btn-start">Open your mailbox</button></div>' +
+    '<div class="facilitator-link" id="btn-facilitator">Facilitator sign-in</div>';
 }
 
-function playHTML(){
-  var idx = state.currentIdx;
-  var e = EMAILS[idx];
-  var saved = state.answers[e.id] || {};
+function inboxHTML(){
+  var handledCount = Object.keys(state.answers).filter(function(k){ return state.answers[k] && state.answers[k].action; }).length;
+  var banner = '';
+  if(state.unlockBanner > 0){
+    banner = '<div class="new-mail-banner">\ud83d\udce9 '+state.unlockBanner+' new email'+(state.unlockBanner===1?'':'s')+' just arrived</div>';
+    state.unlockBanner = 0;
+  }
 
-  var tabs = '<div class="tabs">';
-  EMAILS.forEach(function(em, i){
-    var cls = 'tab' + (i===idx?' current':'') + (state.answers[em.id] && state.answers[em.id].action ? ' done':'');
-    tabs += '<div class="'+cls+'" data-goto="'+i+'">'+(i+1)+'</div>';
-  });
-  tabs += '</div>';
+  var rows = '';
+  for(var i=0;i<state.unlockedCount;i++){
+    var e = EMAILS[i];
+    var a = state.answers[e.id];
+    var handled = a && a.action;
+    var preview = e.body.replace(/\n/g,' ').slice(0,70);
+    rows += '<div class="inbox-row'+(handled?' handled':'')+'" data-open="'+e.id+'">' +
+      '<div class="dot" style="background:'+e.tagColor+'"></div>' +
+      '<div class="meta">' +
+        '<div class="row-top"><span>'+esc(e.from)+'</span><span>'+esc(e.time)+'</span></div>' +
+        '<div class="row-subject">'+esc(e.subject)+'</div>' +
+        '<div class="row-preview">'+esc(preview)+'\u2026</div>' +
+      '</div>' +
+      (handled ? '<span class="row-chip" style="background:'+(ACTIONS.find(function(ac){return ac.key===a.action;})||{}).color+'">'+a.action+'</span>' : '') +
+    '</div>';
+  }
+  var lockedRemaining = EMAILS.length - state.unlockedCount;
+  var lockedHTML = lockedRemaining > 0
+    ? '<div class="locked-row">\ud83d\udd12 '+lockedRemaining+' more email'+(lockedRemaining===1?'':'s')+' will arrive once this batch is cleared</div>'
+    : '';
+
+  return masthead('Email '+(state.unlockedCount)+' unlocked \u00b7 '+handledCount+' of '+EMAILS.length+' handled') +
+    banner +
+    '<div class="inbox-list">' + rows + lockedHTML + '</div>' +
+    (handledCount===EMAILS.length ? '' : '');
+}
+
+function detailHTML(){
+  var e = EMAILS.find(function(x){ return x.id===state.openId; });
+  var saved = state.answers[e.id] || {};
 
   var notesHTML = '';
   if(e.notes){
     notesHTML = '<div class="memo-box"><span class="label">'+esc(e.notesLabel||'Notes')+'</span>' +
       e.notes.map(function(n){return '\u2022 '+esc(n);}).join('\n') + '</div>';
   }
-  var boxHTML = '';
-  if(e.box){
-    boxHTML = '<div class="memo-box"><span class="label">'+esc(e.boxLabel||'Reference')+'</span>'+esc(e.box)+'</div>';
-  }
-  var taskHTML = '';
-  if(e.task){
-    taskHTML = '<div class="memo-box"><span class="label">Your task</span>'+esc(e.task)+'</div>';
-  }
+  var boxHTML = e.box ? '<div class="memo-box"><span class="label">'+esc(e.boxLabel||'Reference')+'</span>'+esc(e.box)+'</div>' : '';
+  var taskHTML = e.task ? '<div class="memo-box"><span class="label">Your task</span>'+esc(e.task)+'</div>' : '';
 
   var stamps = '<div class="stamp-row">';
   ACTIONS.forEach(function(a){
@@ -495,14 +408,22 @@ function playHTML(){
   });
   stamps += '</div>';
 
-  var isLast = idx === EMAILS.length-1;
+  var responseHTML = '';
+  if(e.requiresResponse){
+    responseHTML =
+      '<label class="field-label">Your response <span class="required-mark">(required)</span></label>' +
+      '<textarea id="response-text" placeholder="Draft your reply or task note…">'+esc(saved.response||'')+'</textarea>';
+  }
 
-  return masthead('Email '+(idx+1)+' of '+EMAILS.length) +
-    tabs +
+  var canConfirm = !!saved.action && (!e.requiresResponse || (saved.response && saved.response.trim().length>0));
+
+  return masthead('Email') +
+    '<button class="detail-back" id="btn-back-inbox">\u2190 Back to inbox</button>' +
     '<div class="memo">' +
       '<div class="ribbon" style="background:'+e.tagColor+'">'+esc(e.tag)+'</div>' +
       '<div class="memo-body">' +
         '<div class="memo-row"><b>From</b> &nbsp;'+esc(e.from)+'</div>' +
+        '<div class="memo-row"><b>Time</b> &nbsp;'+esc(e.time)+'</div>' +
         '<div class="memo-subject">'+esc(e.subject)+'</div>' +
         '<div class="memo-text">'+esc(e.body)+'</div>' +
         notesHTML + boxHTML + taskHTML +
@@ -511,29 +432,23 @@ function playHTML(){
     '</div>' +
     '<label class="field-label">Your call</label>' +
     stamps +
-    '<label class="field-label">What would you write or do? (optional for Delete)</label>' +
-    '<textarea id="response-text" placeholder="Draft your reply, task note, or delegation message…">'+esc(saved.response||'')+'</textarea>' +
-    '<div class="nav-row">' +
-      (idx>0 ? '<button class="btn secondary" id="btn-back">Back</button>' : '') +
-      '<button class="btn" id="btn-next">'+(isLast?'Finish':'Save & next')+'</button>' +
-    '</div>';
+    responseHTML +
+    '<button class="btn" id="btn-confirm"'+(canConfirm?'':' disabled')+'>Mark as handled</button>';
 }
 
 function doneHTML(){
   var count = Object.keys(state.answers).filter(function(k){return state.answers[k].action;}).length;
-  return masthead('All '+EMAILS.length+' emails triaged') +
+  return masthead('Mailbox cleared') +
     '<div class="landing-card">' +
-      '<p>Nice work, <b>'+esc(state.teamCode)+'</b>. You made a call on '+count+' of '+EMAILS.length+' emails. Your answers are saved and synced to the group.</p>' +
-      '<p>Open the results view any time to see how every team triaged the same inbox — it updates live.</p>' +
+      '<p>Nice work, <b>'+esc(state.teamCode)+'</b>. You made a call on all '+count+' emails. Your answers are saved.</p>' +
+      '<p>Your facilitator will share the group results once everyone\u2019s done.</p>' +
     '</div>' +
-    '<div class="stack">' +
-      '<button class="btn" id="btn-review">View team results</button>' +
-      '<button class="btn secondary" id="btn-edit">Review / edit my answers</button>' +
-    '</div>';
+    '<div class="stack"><button class="btn secondary" id="btn-review-mine">Review my answers</button></div>' +
+    '<div class="facilitator-link" id="btn-facilitator">Facilitator sign-in</div>';
 }
 
 function reviewShellHTML(){
-  return masthead('<span class="live-dot"></span>Results \u00b7 live') + '<div id="review-body"><p class="empty-note">Loading…</p></div>';
+  return masthead('<span class="live-dot"></span>Facilitator results \u00b7 live') + '<div id="review-body"><p class="empty-note">Loading…</p></div>';
 }
 
 function bindReviewLive(){
@@ -563,7 +478,7 @@ function bindReviewLive(){
 function reviewBodyHTML(all){
   var html = '';
   if(all.length===0){
-    html += '<div class="landing-card"><p class="empty-note">No teams have submitted yet. Once teams start the simulation and make their calls, results will appear here automatically.</p></div>';
+    html += '<div class="landing-card"><p class="empty-note">No teams have submitted yet.</p></div>';
   } else {
     EMAILS.forEach(function(e){
       var counts = {DELETE:0,DELEGATE:0,DO:0,DEFER:0};
@@ -605,13 +520,11 @@ function reviewBodyHTML(all){
       } else {
         html += '<p class="empty-note">No team has answered this one yet.</p>';
       }
-
       html += '</div>';
     });
   }
-
   html += '<div class="stack"><button class="btn secondary" id="btn-home">Back to start</button></div>';
-  html += '<div class="footer-link" id="btn-reset">Reset all submissions (facilitator)</div>';
+  html += '<div class="footer-link" id="btn-reset">Reset all submissions</div>';
   return html;
 }
 
@@ -622,65 +535,89 @@ function bindEvents(){
       var existing = getHashCode();
       state.teamCode = existing || makeTeamCode();
       setHashCode(state.teamCode);
-      state.screen='play';
-      state.currentIdx=0;
+      state.screen='inbox';
       render();
     };
   }
-  if(el = document.getElementById('btn-review')){
-    el.onclick = function(){ state.screen='review'; render(); };
+  if(el = document.getElementById('btn-facilitator')){
+    el.onclick = function(){
+      var code = prompt('Enter facilitator passcode:');
+      if(code===null) return;
+      if(code===FACILITATOR_CODE){ state.screen='review'; render(); }
+      else alert('Incorrect passcode.');
+    };
   }
-  if(el = document.getElementById('btn-edit')){
-    el.onclick = function(){ state.screen='play'; state.currentIdx=0; render(); };
+  if(el = document.getElementById('btn-review-mine')){
+    el.onclick = function(){
+      alert(EMAILS.map(function(e){
+        var a = state.answers[e.id] || {};
+        return e.id+' \u2014 '+e.subject+': '+(a.action||'(not answered)')+(a.response? '\n  "'+a.response+'"':'');
+      }).join('\n\n'));
+    };
+  }
+  document.querySelectorAll('[data-open]').forEach(function(row){
+    row.onclick = function(){
+      state.openId = row.getAttribute('data-open');
+      state.screen = 'detail';
+      render();
+    };
+  });
+  if(el = document.getElementById('btn-back-inbox')){
+    el.onclick = function(){
+      saveCurrentResponse();
+      state.screen = 'inbox';
+      render();
+    };
   }
   document.querySelectorAll('.stamp').forEach(function(s){
     s.onclick = function(){
-      var e = EMAILS[state.currentIdx];
+      var e = EMAILS.find(function(x){ return x.id===state.openId; });
       if(!state.answers[e.id]) state.answers[e.id] = {};
       state.answers[e.id].action = s.getAttribute('data-action');
       render();
     };
   });
-  document.querySelectorAll('[data-goto]').forEach(function(t){
-    t.onclick = function(){
-      saveCurrentResponse();
-      state.currentIdx = parseInt(t.getAttribute('data-goto'),10);
-      render();
-    };
-  });
-  if(el = document.getElementById('btn-back')){
+  if(el = document.getElementById('btn-confirm')){
     el.onclick = function(){
       saveCurrentResponse();
-      state.currentIdx = Math.max(0, state.currentIdx-1);
+      var gained = maybeUnlockNext();
+      saveSubmission();
+      if(gained > 0) state.unlockBanner = gained;
+      var allDone = Object.keys(state.answers).filter(function(k){return state.answers[k].action;}).length === EMAILS.length
+                    && state.unlockedCount === EMAILS.length;
+      state.screen = allDone ? 'done' : 'inbox';
       render();
-    };
-  }
-  if(el = document.getElementById('btn-next')){
-    el.onclick = function(){
-      saveCurrentResponse();
-      saveSubmission(); // not awaited — runs in background, status shown via sync-status
-      if(state.currentIdx < EMAILS.length-1){
-        state.currentIdx++;
-        render();
-      } else {
-        state.screen='done';
-        render();
-      }
     };
   }
 }
 
 function saveCurrentResponse(){
-  var e = EMAILS[state.currentIdx];
+  if(!state.openId) return;
+  var e = EMAILS.find(function(x){ return x.id===state.openId; });
   var ta = document.getElementById('response-text');
   if(!state.answers[e.id]) state.answers[e.id] = {};
   if(ta) state.answers[e.id].response = ta.value;
 }
 
-var resumeCode = getHashCode();
-if(resumeCode){ state.teamCode = resumeCode; }
+async function init(){
+  var resumeCode = getHashCode();
+  if(resumeCode && db){
+    try{
+      var snap = await getDoc(doc(db, COLLECTION_NAME, docIdFor(resumeCode)));
+      if(snap.exists()){
+        var data = snap.data();
+        state.teamCode = resumeCode;
+        state.answers = data.answers || {};
+        state.unlockedCount = data.unlockedCount || BATCH_SIZES[0];
+        var handled = Object.keys(state.answers).filter(function(k){return state.answers[k].action;}).length;
+        state.screen = (handled===EMAILS.length && state.unlockedCount===EMAILS.length) ? 'done' : 'inbox';
+      }
+    }catch(e){ console.error('resume failed', e); }
+  }
+  render();
+}
 
-render();
+init();
 </script>
 </body>
 </html>
