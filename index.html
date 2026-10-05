@@ -121,6 +121,7 @@
   textarea::placeholder{ color:#A39B86; }
   label.field-label{ display:block; font-size:11px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; }
   .required-mark{ color:var(--rust); }
+  .confirm-hint{ font-size:12px; color:var(--ink-soft); margin:6px 0 2px; min-height:14px; }
 
   .nav-row{ display:flex; gap:8px; }
   .nav-row .btn{ flex:1; }
@@ -251,12 +252,12 @@ var WARMUP_EMAILS = [
     tag:'MANDATORY', tagColor:'var(--rust)'
   },
   {
-    id:'W8', from:'Nadia Rahman', subject:'Quick 15-minute slot needed', time:'7:56 AM',
-    body:"Hi,\n\nWe need to squeeze a 15-minute walkthrough into this afternoon for a visitor. They're free 2:00\u20132:45pm, but need 10 minutes beforehand to get set up, and we also want 5 minutes afterward for questions.\n\nCan you send me a quick time slot plan?\n\nThanks,\nNadia",
-    task:'Propose a simple time plan that fits the 15-minute walkthrough plus setup and Q&A within the visitor\u2019s 2:00\u20132:45pm window.',
-    est:'~5 min', requiresResponse:true,
-    exampleResponse:"2:00\u20132:10 Setup\n2:10\u20132:25 Walkthrough\n2:25\u20132:30 Questions\n(2:30\u20132:45 spare/buffer)",
-    scoringNote:"Accept any plan that fits within the window and covers setup, the 15-minute walkthrough, and time for questions.",
+    id:'W8', from:'Elaine Ho', subject:'Which vendor should we go with?', time:'7:56 AM',
+    body:"Hi,\n\nWe've got two quotes in for next month's team event. Vendor A is faster and more polished but costs about 20% more. Vendor B is solid but would take two extra days to confirm.\n\nCould you give me your call and a one-line reason by 9am so I can lock it in?\n\nThanks,\nElaine",
+    task:'Pick a vendor and give a one-line reason for your choice.',
+    est:'~3 min', requiresResponse:true,
+    exampleResponse:"Go with Vendor B \u2014 the two extra days don't affect our timeline, and staying within budget matters more here than the extra polish.",
+    scoringNote:"Accept either vendor, as long as the reasoning is clear and references the actual trade-off (cost vs. speed/polish).",
     tag:'MANDATORY', tagColor:'var(--rust)'
   }
 ];
@@ -331,13 +332,13 @@ var EMAILS = [
     meaning:"Potentially high impact because it's customer-facing, but the consequence isn't immediate yet. Protect time for it or route it to the appropriate contributor.\n\nImportant: email 20 will change this judgement \u2014 revisit this call once it arrives."
   },
   {
-    id:'11', tag:'MANDATORY', tagColor:'var(--rust)', from:'Melissa Goh', subject:"Tomorrow's review — only 30 mins now", time:'10:02 AM',
-    body:"Hi,\n\nWe've had to shorten tomorrow's review from an hour to 30 minutes.\n\nWe normally cover previous actions, performance, open issues, upcoming milestones, lessons learned and next actions.\n\nCould you propose a revised agenda so we use the 30 minutes well?\n\nThanks,\nMelissa",
-    box:"Purpose: make sure the team leaves clear on current performance, issues requiring decisions, upcoming risks and who owns the next actions.\n\nDetailed information can be shared before or after the meeting if discussion isn't required.",
-    boxLabel:'Purpose of the review',
-    task:'Draft a 30-minute agenda.', est:'~6 min', requiresResponse:true,
-    exampleResponse:"5 min \u2014 Previous actions + key performance exceptions\n10 min \u2014 Priority open issues / decisions\n7 min \u2014 Upcoming milestones and risks\n8 min \u2014 Decisions, owners and next actions\n\nDetailed performance information and lessons learned circulated offline.",
-    scoringNote:"Accept alternatives that preserve the meeting's purpose."
+    id:'11', tag:'MANDATORY', tagColor:'var(--rust)', from:'Melissa Goh', subject:'Could you reply to this one directly?', time:'10:02 AM',
+    body:"Hi,\n\nThe message below just came in from one of our stakeholders. I'm back-to-back until this afternoon — could you reply to them directly?\n\nThanks,\nMelissa",
+    box:"FROM Priya Nathan\nSUBJECT Timeline for next milestone\n\nHi Melissa,\n\nWe heard the next milestone might be slipping. Can you confirm whether the agreed date is still on track, and if not, what the revised date is and why?\n\nThanks,\nPriya",
+    boxLabel:'Forwarded email',
+    task:'Reply to Priya.', est:'~6 min', requiresResponse:true,
+    exampleResponse:"Hi Priya,\n\nThanks for checking in. The milestone date has shifted slightly — from 15 Oct to 22 Oct — due to a dependency on an upstream team that came in later than planned. The rest of the schedule is unaffected.\n\nHappy to walk through details if useful.\n\nRegards,\n[Name]",
+    scoringNote:"Score clarity, honesty about the slip, and whether a reason/next step is given — not exact wording."
   },
   {
     id:'12', from:'Aina Yusuf', subject:'Which template should I use?', time:'10:08 AM',
@@ -622,6 +623,19 @@ function detailHTML(){
 
   var canConfirm = !!saved.action && (!e.requiresResponse || (saved.response && saved.response.trim().length>0));
 
+  var hintHTML = '';
+  if(!canConfirm){
+    if(!saved.action && e.requiresResponse){
+      hintHTML = '<div class="confirm-hint" id="confirm-hint">Pick a call above (DELETE / DELEGATE / DO / DEFER) and write your response to unlock this.</div>';
+    } else if(!saved.action){
+      hintHTML = '<div class="confirm-hint" id="confirm-hint">Pick a call above to unlock this.</div>';
+    } else if(e.requiresResponse){
+      hintHTML = '<div class="confirm-hint" id="confirm-hint">Write your response above to unlock this.</div>';
+    }
+  } else {
+    hintHTML = '<div class="confirm-hint" id="confirm-hint"></div>';
+  }
+
   return masthead('Email') +
     '<button class="detail-back" id="btn-back-inbox">\u2190 Back to inbox</button>' +
     '<div class="memo">' +
@@ -639,6 +653,7 @@ function detailHTML(){
     '<label class="field-label">Your call</label>' +
     stamps +
     responseHTML +
+    hintHTML +
     '<button class="btn" id="btn-confirm"'+(canConfirm?'':' disabled')+'>Mark as handled</button>';
 }
 
@@ -820,9 +835,17 @@ function bindEvents(){
     el.oninput = function(){
       var e = ALL_EMAILS.find(function(x){ return x.id===state.openId; });
       var a = state.answers[e.id] || {};
-      var ok = !!a.action && (!e.requiresResponse || el.value.trim().length>0);
+      var hasResponse = el.value.trim().length>0;
+      var ok = !!a.action && (!e.requiresResponse || hasResponse);
       var btn = document.getElementById('btn-confirm');
       if(btn) btn.disabled = !ok;
+      var hint = document.getElementById('confirm-hint');
+      if(hint){
+        if(ok){ hint.textContent = ''; }
+        else if(!a.action && e.requiresResponse){ hint.textContent = 'Pick a call above (DELETE / DELEGATE / DO / DEFER) and write your response to unlock this.'; }
+        else if(!a.action){ hint.textContent = 'Pick a call above to unlock this.'; }
+        else { hint.textContent = 'Write your response above to unlock this.'; }
+      }
     };
   }
   if(el = document.getElementById('btn-back-inbox')){
