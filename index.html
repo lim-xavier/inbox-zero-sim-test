@@ -204,205 +204,213 @@ var IMG_DRIVE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAYEBAUE
 
 var WARMUP_BATCH_SIZES = [8];
 
+var ROLE_BRIEF = {
+  role: 'HR Executive',
+  scope: 'Onboarding \u00b7 Training \u00b7 Employee records \u00b7 HR communications \u00b7 Routine HR coordination & reporting',
+  outOfScope: 'Payroll \u00b7 Recruitment \u00b7 Employee Relations \u00b7 Policy exceptions',
+  context: 'It\u2019s 10:15am. Your next meeting is at 11:00am.'
+};
+
 var WARMUP_EMAILS = [
   {
-    id:'W1', from:'Facilities Team', subject:'Pantry restocked this morning', time:'7:32 AM',
-    body:"Hi all,\n\nJust a note that the pantry has been restocked with snacks and coffee supplies for the week.\n\nEnjoy!\n\nFacilities Team",
+    id:'W1', from:'Siti Aminah', subject:"Photos from Friday's Fruit Day", time:'9:10 AM',
+    body:"Hi everyone,\n\nThanks to everyone who joined us on Friday! We've uploaded the photos here if you'd like to take a look.\n\nHave a great week!\n\nSiti",
     suggested:'DELETE',
-    meaning:"No action needed, and nothing changes if you never open it again."
+    meaning:"No required action and no meaningful consequence of waiting."
   },
   {
-    id:'W2', from:'Melissa Goh', subject:'Headcount for today\u2019s lunch', time:'7:38 AM',
-    body:"Hi,\n\nWe're finalising catering numbers for today's team lunch. Are you joining? Just reply Yes or No.\n\nThanks,\nMelissa",
-    suggested:'DO',
-    meaning:"Low effort and a quick turnaround \u2014 clearing it now costs you almost nothing."
-  },
-  {
-    id:'W3', from:'Jason Lim', subject:'Quarterly highlights for Friday', time:'7:41 AM',
-    body:"Hi,\n\nI'm pulling together quarterly highlights for Friday's review. Could you send me two or three from your team sometime before then?\n\nNo rush \u2014 anytime before Friday morning works.\n\nThanks,\nJason",
-    suggested:'DEFER',
-    meaning:"It matters, but the deadline is days away \u2014 schedule it rather than doing it now."
-  },
-  {
-    id:'W4', from:'Aina Yusuf', subject:'Where do I find the onboarding checklist?', time:'7:44 AM',
-    body:"Hi,\n\nI'm helping a new team member get set up and can't remember where the onboarding checklist lives. Do you know where I should look?\n\nThanks,\nAina",
-    box:'Shared Drive \u2192 Team Documents \u2192 Onboarding \u2192 Checklist (current)', boxLabel:'Reference',
+    id:'W2', from:'Aina Yusuf', subject:'New joiner laptop collection', time:'9:13 AM',
+    body:"Hi,\n\nTomorrow's new joiner asked where to collect their laptop when they arrive. I don't have the collection details yet.\n\nCould you help confirm this?\n\nThanks,\nAina",
     suggested:'DELEGATE', alternative:'ROUTE',
-    meaning:"Point her to the source rather than retrieving it yourself \u2014 it isn't your task to carry."
+    meaning:"The issue matters for onboarding, but laptop arrangements belong with the appropriate IT/admin owner. Route it promptly rather than taking ownership of work outside the role."
   },
   {
-    id:'W5', from:'Farid Ismail', subject:'URGENT \u2014 slide formatting', time:'7:47 AM',
-    body:"Hi,\n\nCould you tidy up the formatting on my slides before I present them? Content's final, just needs to look neater.\n\nI'd like it by end of day.\n\nThanks,\nFarid",
-    suggested:'DEFER', alternative:'DELEGATE',
-    meaning:"\u201cUrgent\u201d and a same-day deadline still leave you room \u2014 a few hours' wait costs little."
+    id:'W3', tag:'MANDATORY', tagColor:'var(--rust)', from:'Melissa Goh', subject:"Final check \u2014 tomorrow's new joiners", time:'9:16 AM',
+    body:"Hi,\n\nI'm finalising tomorrow's new-joiner briefing.\n\nCould you check the attendance list and confirm whether everyone expected tomorrow is included?\n\nPlease let me know before 10:30am.\n\nThanks,\nMelissa",
+    box:"EXPECTED NEW JOINERS\nNur Aisyah, Kelvin Tan, Priya Nair, Hafiz Rahman, Joanne Lee\n\nCURRENT ATTENDANCE LIST (attachment)\nNur Aisyah, Kelvin Tan, Priya Nair, Joanne Lee, Daniel Chua",
+    boxLabel:'New joiner lists',
+    task:'Reply to Melissa.', est:'~2\u20133 min', requiresResponse:true,
+    exampleResponse:"Hi Melissa, Hafiz Rahman is missing from the current list, while Daniel Chua isn't on the expected new-joiner list. Please update these before finalising. Thanks.",
+    scoringNote:"Don't score exact wording \u2014 look for both discrepancies being correctly identified."
   },
   {
-    id:'W6', from:'Amir Hakim', subject:'Waiting on your go-ahead', time:'7:50 AM',
-    body:"Hi,\n\nCan you confirm you're happy with the attached numbers? We can't submit our report until we hear back from you.\n\nThanks,\nAmir",
+    id:'W4', from:'Jason Lim', subject:'Training evaluation summary', time:'9:19 AM',
+    body:"Hi,\n\nCould you prepare a short summary of the feedback from last week's training programme?\n\nI'd like to review it before our discussion on Friday afternoon.\n\nThanks,\nJason",
+    suggested:'DEFER',
+    meaning:"Useful work, but the consequence of waiting is low right now. Schedule it for an appropriate work block."
+  },
+  {
+    id:'W5', from:'Daniel Wong', subject:"Headcount for today's department meeting", time:'9:22 AM',
+    body:"Hi,\n\nCan you confirm whether we currently have 26 or 27 employees in the department?\n\nI need the figure for my 11am meeting.\n\nThanks,\nDaniel",
+    box:'Current employee list: 27 active employees.', boxLabel:'Attachment',
     suggested:'DO',
-    meaning:"Someone else's work is stalled on you \u2014 a one-line reply clears the block immediately."
+    meaning:"Near-term dependency and trivial effort. A quick answer prevents a problem in an upcoming meeting."
   },
   {
-    id:'W7', from:'Your Manager', subject:'Quick update before my 9am', time:'7:53 AM',
-    body:"Hi,\n\nI've got a 9am call shortly. Could you send me a short paragraph on where your work stands right now?\n\nThanks",
-    task:'Draft a short paragraph (2\u20133 sentences) summarising where your work stands.',
-    est:'~4 min', requiresResponse:true,
-    exampleResponse:"Things are on track overall. The main deliverable is in final review and should be ready by end of week. One dependency is still pending from another team, but it isn't blocking progress yet.",
-    scoringNote:"Don't score exact wording \u2014 look for a clear, honest snapshot in a few sentences.",
-    tag:'MANDATORY', tagColor:'var(--rust)'
+    id:'W6', from:'Rachel Ong', subject:'Candidate start date', time:'9:25 AM',
+    body:"Hi,\n\nDo you know whether the candidate we interviewed last week has accepted the offer and when they're expected to start?\n\nI'm planning next month's manpower arrangements.\n\nThanks,\nRachel",
+    suggested:'DELEGATE', alternative:'ROUTE',
+    meaning:"Potentially important, but Recruitment owns candidate/offer status. Route Rachel to the right owner rather than guessing or taking over."
   },
   {
-    id:'W8', from:'Elaine Ho', subject:'Which vendor should we go with?', time:'7:56 AM',
-    body:"Hi,\n\nWe've got two quotes in for next month's team event. Vendor A is faster and more polished but costs about 20% more. Vendor B is solid but would take two extra days to confirm.\n\nCould you give me your call and a one-line reason by 9am so I can lock it in?\n\nThanks,\nElaine",
-    task:'Pick a vendor and give a one-line reason for your choice.',
-    est:'~3 min', requiresResponse:true,
-    exampleResponse:"Go with Vendor B \u2014 the two extra days don't affect our timeline, and staying within budget matters more here than the extra polish.",
-    scoringNote:"Accept either vendor, as long as the reasoning is clear and references the actual trade-off (cost vs. speed/polish).",
-    tag:'MANDATORY', tagColor:'var(--rust)'
+    id:'W7', tag:'MANDATORY', tagColor:'var(--rust)', from:'Alicia Tan', subject:"Reminder for Thursday's training", time:'9:28 AM',
+    body:"Hi,\n\nCould you send the participants a reminder for Thursday's training?\n\nPlease make sure they know what they need to do before the session and where to go.\n\nThanks,\nAlicia",
+    box:"Effective Workplace Communication\nThursday, 9 October, 9:00am\u201312:30pm\nTraining Room 2, Level 3\n\nParticipants should:\n\u2022 arrive by 8:50am\n\u2022 bring their laptop\n\u2022 complete the 10-minute pre-work before attending\n\nIf unable to attend, contact Alicia.",
+    boxLabel:'Training details',
+    task:'Draft the participant reminder.', est:'~3\u20134 min', requiresResponse:true,
+    exampleResponse:"Subject: Reminder \u2014 Effective Workplace Communication, Thursday\n\nHi everyone,\n\nA reminder that Effective Workplace Communication is this Thursday, 9 October, from 9:00am\u201312:30pm at Training Room 2, Level 3. Please arrive by 8:50am, bring your laptop and complete the 10-minute pre-work before the session.\n\nIf you're unable to attend, please let Alicia know.\n\nThanks.",
+    scoringNote:"Don't score exact wording \u2014 look for all key details (date, time, location, pre-work, contact) being covered."
+  },
+  {
+    id:'W8', from:'Jason Lim', subject:'URGENT \u2014 Engagement event slides', time:'9:31 AM',
+    body:"Hi,\n\nCould you help tidy up the formatting on the slides for next week's employee engagement event?\n\nThe content is already final. I'd like to review the slides by 4pm today.\n\nThanks,\nJason",
+    suggested:'DEFER', alternative:'DELEGATE',
+    meaning:"Same-day deadline, but little meaningful consequence from waiting until an appropriate work block. \u201cURGENT\u201d in the subject does not itself make the consequence urgent."
   }
 ];
 
 var EMAILS = [
   {
-    id:'01', from:'Nadia Rahman', subject:'Weekly CI dashboard', time:'8:02 AM',
-    body:"Hi,\n\nSharing this week's CI dashboard for reference. No action is required unless you have any questions.\n\nThanks,\nNadia",
+    id:'01', from:'Nadia Rahman', subject:'Weekly HR dashboard', time:'10:15 AM',
+    body:"Hi,\n\nSharing this week's HR dashboard for reference.\n\nNo action required unless you have any questions.\n\nThanks,\nNadia",
     attachmentImage: IMG_CI,
     suggested:'DELETE',
-    meaning:'Low importance to current work and no urgency. Nothing meaningful happens if it waits.'
+    meaning:"No action required and no meaningful consequence of leaving it."
   },
   {
-    id:'02', tag:'MANDATORY', tagColor:'var(--rust)', from:'Farid Ismail', subject:'Weekly update — reminder', time:'9:50 AM',
+    id:'02', tag:'MANDATORY', tagColor:'var(--rust)', from:'Farid Ismail', subject:'Weekly update \u2014 reminder', time:'10:17 AM',
     body:"Hi,\n\nJust a reminder to send me your weekly update before 10:45am for my 11am management meeting.\n\nPlease cover:\n\u2022 What was completed this week\n\u2022 What's next\n\u2022 Any issue or support needed\n\nThanks,\nFarid",
-    materialImage: IMG_TEAM, materialLabel:'View your team\u2019s info',
-    task:'Draft the weekly update covering what was completed, what\u2019s next, and any issues or support needed.',
-    est:'~5 min', requiresResponse:true,
-    exampleResponse:"Completed: Revised team tracker rolled out; 7 of 9 outstanding actions closed; September report submitted on time.\nNext: Close the remaining two actions, prepare for Thursday's cross-department review and continue onboarding.\nWatch-out: One action is awaiting Finance confirmation. Follow-up was sent this morning; nothing is currently blocked.",
-    scoringNote:"Don't score exact wording. Look for selection, clarity and appropriate escalation."
+    box:"COMPLETED\n\u2022 New-joiner briefing completed for 8 employees\n\u2022 7 of 9 outstanding onboarding actions closed\n\u2022 October training calendar published\n\u2022 Employee-record clean-up completed for two departments\n\nNEXT\n\u2022 Close remaining 2 onboarding actions by Friday\n\u2022 Prepare for Thursday's cross-department onboarding review\n\u2022 Continue follow-up on outstanding system access\n\nISSUE\n\u2022 One remaining onboarding action depends on IT access confirmation\n\u2022 Confirmation was expected yesterday\n\u2022 Follow-up sent this morning\n\u2022 Nobody is currently blocked",
+    boxLabel:'Your week in HR',
+    task:'Send Farid the weekly update.', est:'~5 min', requiresResponse:true,
+    exampleResponse:"Completed: New-joiner briefing completed for eight employees, 7 of 9 outstanding onboarding actions closed, and the October training calendar published.\nNext: Close the remaining onboarding actions and prepare for Thursday's cross-department review.\nWatch-out: One action is awaiting IT access confirmation. Follow-up was sent this morning; nobody is currently blocked.",
+    scoringNote:"Don't score exact wording \u2014 look for selection, clarity and appropriate escalation of the watch-out."
   },
   {
-    id:'03', from:'Jason Lim', subject:"Highlights for Friday's town hall", time:'8:20 AM',
-    body:"Hi,\n\nI'm preparing Friday's town hall and would like to include a few examples of what different teams have achieved this month.\n\nCould you send me three short highlights from your team?\n\nPlease send them by tomorrow, 12pm.\n\nThanks,\nJason",
+    id:'03', from:'Jason Lim', subject:"Highlights for Friday's town hall", time:'10:19 AM',
+    body:"Hi,\n\nI'm preparing Friday's town hall and would like to include a few examples of what HR has achieved this month.\n\nCould you send me three short highlights?\n\nPlease send them by tomorrow, 12pm.\n\nThanks,\nJason",
     suggested:'DEFER', alternative:'DELEGATE',
-    meaning:"Meaningful, but the consequence is later. Schedule it rather than interrupting current work; delegate preparation if someone else has the information."
+    meaning:"Meaningful, but the consequence is later. Schedule it or have an appropriate colleague compile the information."
   },
   {
-    id:'04', from:'Amir Hakim', subject:'Can you confirm this before we submit?', time:'10:15 AM',
-    body:"Hi,\n\nCan you confirm whether Version 4 dated 2 October is the latest approved version?\n\nWe're holding our 11am submission until we hear from you.\n\nThanks,\nAmir",
-    box:"V3 \u2014 25 Sep \u2014 Superseded\nV4 \u2014 2 Oct \u2014 Approved\nV5 \u2014 4 Oct \u2014 Draft", boxLabel:'Version history',
-    suggested:'DO', alternative:'DELEGATE (if another authorised owner can confirm immediately)',
-    meaning:"Another team's work is already blocked, so the consequence is both meaningful and occurring now. Very little effort clears the dependency."
+    id:'04', from:'Amir Hakim', subject:'Can you confirm before I submit?', time:'10:22 AM',
+    body:"Hi,\n\nCan you confirm whether the 2 October headcount report is the latest approved version?\n\nI'm holding my 11am submission until I hear from you.\n\nThanks,\nAmir",
+    box:"25 Sep \u2014 Superseded\n2 Oct \u2014 Approved\n4 Oct \u2014 Draft",
+    boxLabel:'Report versions',
+    suggested:'DO',
+    meaning:"Another person is blocked now and the confirmation requires almost no effort."
   },
   {
-    id:'05', from:'Daniel Wong', subject:'September report', time:'9:05 AM',
-    body:"Hi,\n\nI'm pulling together some background for a discussion later this week and need the approved September report.\n\nI remember seeing it before, but I can't remember whether you sent it to me or whether it was on the shared drive. I checked a couple of folders but there seem to be several versions.\n\nIf you happen to know where the approved one is, could you send it over when you get a chance?\n\nThanks!\nDaniel",
+    id:'05', from:'Daniel Wong', subject:'September training attendance report', time:'10:25 AM',
+    body:"Hi,\n\nI'm pulling together some background for a discussion later this week and need the approved September training attendance report.\n\nI remember seeing it before, but I can't remember whether you sent it or whether it was on the shared drive. There seem to be several versions there.\n\nIf you know where the approved one is, could you send it over when you get a chance?\n\nThanks,\nDaniel",
     attachmentImage: IMG_DRIVE,
-    suggested:'DELEGATE / ROUTE', alternative:'DEFER',
-    meaning:"Low impact and low urgency. Point Daniel to the existing source rather than doing the retrieval for him; otherwise it can wait."
+    suggested:'DELEGATE', alternative:'ROUTE',
+    meaning:"Low urgency. Direct Daniel to the existing source rather than doing the retrieval for him; otherwise it can wait.",
+    exampleResponse:null
   },
   {
-    id:'06', from:'Alicia Tan', subject:'Sharing session this afternoon', time:'8:35 AM',
+    id:'06', from:'Alicia Tan', subject:'Sharing session this afternoon', time:'10:28 AM',
     body:"Hi,\n\nWe're running a 45-minute sharing session on Creating Better Presentation Slides today at 3pm.\n\nAttendance is optional. If you'd like to join, please register by noon.\n\nRegards,\nAlicia",
     suggested:'DELETE', alternative:'DEFER',
-    meaning:"A deadline doesn't make something important. If it supports a current development need, revisit it later; otherwise remove it from attention."
+    meaning:"The registration deadline matters only if attending is sufficiently valuable."
   },
   {
-    id:'07', tag:'MANDATORY', tagColor:'var(--rust)', from:'Nadia Rahman', subject:'Visitor programme for tomorrow', time:'8:50 AM',
-    body:"Hi,\n\nCould you draft the programme for tomorrow's visiting team?\n\nThey'll be with us from 9:00am\u201312:00pm. By the end of the visit, we'd like them to:\n\u2022 understand what our team does\n\u2022 see the workplace for themselves\n\u2022 have time to discuss questions with Mr Lee\n\nA few things to work around:\n\u2022 All visitors must complete 15 minutes of registration before entering.\n\u2022 Mr Lee is only available from 10:45\u201311:30am.\n\u2022 The site visit needs about 60 minutes.\n\u2022 Allow 10 minutes in total to walk there and back.\n\u2022 We'd like to give them a 15-minute break.\n\u2022 They need a 20-minute safety/site briefing before entering the site.\n\nPlease send me a proposed itinerary.\n\nThanks,\nNadia",
-    task:'Draft the 9:00am\u201312:00pm programme.', est:'~7 min', requiresResponse:true,
-    exampleResponse:"9:00\u20139:15 Registration\n9:15\u20139:35 Welcome + team overview\n9:35\u20139:55 Safety/site briefing\n9:55\u201310:00 Walk to site\n10:00\u201311:00 Site visit\n11:00\u201311:05 Walk back\n11:05\u201311:30 Discussion with Mr Lee\n11:30\u201311:45 Break\n11:45\u201312:00 Questions / wrap-up",
-    scoringNote:'Accept other solutions that meet the objectives and constraints.'
+    id:'07', tag:'MANDATORY', tagColor:'var(--rust)', from:'Nadia Rahman', subject:'Onboarding programme for tomorrow', time:'10:30 AM',
+    body:"Hi,\n\nWe have six new employees starting tomorrow. Could you draft their morning onboarding programme?\n\nThey'll arrive at 8:30am and should be ready to report to their departments by 12:00pm.\n\nBy then, they need to:\n\u2022 complete their joining administration;\n\u2022 understand the essential HR information they need for their first day;\n\u2022 complete the required workplace briefing;\n\u2022 have their system accounts set up;\n\u2022 meet their department representatives before reporting to their teams.\n\nA few constraints:\n\u2022 Joining administration takes about 30 minutes.\n\u2022 The required workplace briefing takes 30 minutes.\n\u2022 IT can support account setup only from 10:15\u201311:00am.\n\u2022 Department representatives are available from 11:15am.\n\u2022 Please include a 15-minute break.\n\nThanks,\nNadia",
+    task:'Draft the 8:30am\u201312:00pm programme.', est:'~7 min', requiresResponse:true,
+    exampleResponse:"8:30\u20139:00 Joining administration\n9:00\u20139:30 HR welcome / essential first-day information\n9:30\u201310:00 Required workplace briefing\n10:00\u201310:15 Break\n10:15\u201311:00 System account setup with IT\n11:00\u201311:15 Questions / preparation for department handover\n11:15\u201311:45 Meet department representatives\n11:45\u201312:00 Final questions / report-to-team arrangements",
+    scoringNote:'Accept other workable solutions.'
   },
   {
-    id:'08', from:'Farid Ismail', subject:'URGENT — Monthly report', time:'9:15 AM',
-    body:"Hi,\n\nPlease tidy up the formatting on the monthly report before I review it.\n\nThe content is already final \u2014 I mainly need the tables, headings and spacing cleaned up.\n\nI'd like the final version by 5pm today.\n\nThanks,\nFarid",
+    id:'08', from:'Farid Ismail', subject:'URGENT \u2014 Monthly HR report', time:'10:33 AM',
+    body:"Hi,\n\nPlease tidy up the formatting on the monthly HR report before I review it.\n\nThe content is already final \u2014 I mainly need the tables, headings and spacing cleaned up.\n\nI'd like the final version by 5pm today.\n\nThanks,\nFarid",
     suggested:'DEFER', alternative:'DELEGATE',
-    meaning:'It matters, but a short wait creates little consequence. "URGENT", a senior sender and a same-day deadline do not automatically mean it needs attention now.'
+    meaning:"Important enough to complete today, but a short delay has little consequence."
   },
   {
-    id:'09', from:'Melissa Goh', subject:'Can you confirm attendance for 2pm?', time:'9:40 AM',
-    body:"Hi,\n\nCan you confirm whether you'll attend today's 2pm project review?\n\nWe're finalising the headcount for visitor passes.\n\nJust reply Yes or No when you can.\n\nThanks,\nMelissa",
+    id:'09', from:'Melissa Goh', subject:'Can you confirm attendance for 2pm?', time:'10:36 AM',
+    body:"Hi,\n\nCan you confirm whether you'll attend today's 2pm HR project review?\n\nI'm finalising the attendance list now.\n\nJust reply Yes or No when you can.\n\nThanks,\nMelissa",
     suggested:'DO',
-    meaning:"Limited impact but the consequence occurs relatively soon, and the action takes seconds. Clear it efficiently."
+    meaning:"Very small action with a near-term coordination consequence."
   },
   {
-    id:'10', from:'Sarah Lee', subject:"Input for this afternoon's customer review", time:'9:58 AM',
-    body:"Hi,\n\nI'm consolidating input for our 2:30pm customer review.\n\nThe recent feedback highlights three themes:\n\u2022 Updates are useful, but sometimes arrive later than expected.\n\u2022 Different contacts sometimes provide slightly different information.\n\u2022 Response time has improved over the past month.\n\nCould you review the attached summary and send me any comments relevant to your area by 1:30pm?\n\nI'll consolidate everyone's input before the review.\n\nThanks,\nSarah",
-    boxLabel:'Attachment', box:'Customer_Feedback_Summary.pdf',
+    id:'10', from:'Sarah Lee', subject:"Input for this afternoon's manager review", time:'10:38 AM',
+    body:"Hi,\n\nI'm consolidating input for our 2:30pm manager review.\n\nRecent feedback about onboarding highlights three themes:\n\u2022 Managers find the joining information useful, but sometimes receive it later than expected.\n\u2022 New employees occasionally receive different instructions from different contacts.\n\u2022 Feedback on the new first-week checklist has been positive.\n\nCould you review the attached summary and send any comments from the HR operations side by 1:30pm?\n\nThanks,\nSarah",
+    box:'Onboarding_Feedback_Summary.pdf', boxLabel:'Attachment',
     suggested:'DEFER', alternative:'DELEGATE',
-    meaning:"Potentially high impact because it's customer-facing, but the consequence isn't immediate yet. Protect time for it or route it to the appropriate contributor.\n\nImportant: email 20 will change this judgement \u2014 revisit this call once it arrives."
+    meaning:"Important, but its consequence is not immediate yet. Protect time or route to an appropriate contributor.\n\nImportant: email 20 will change this judgement \u2014 revisit this call once it arrives."
   },
   {
-    id:'11', tag:'MANDATORY', tagColor:'var(--rust)', from:'Melissa Goh', subject:'Could you reply to this one directly?', time:'10:02 AM',
-    body:"Hi,\n\nThe message below just came in from one of our stakeholders. I'm back-to-back until this afternoon — could you reply to them directly?\n\nThanks,\nMelissa",
-    box:"FROM Priya Nathan\nSUBJECT Timeline for next milestone\n\nHi Melissa,\n\nWe heard the next milestone might be slipping. Can you confirm whether the agreed date is still on track, and if not, what the revised date is and why?\n\nThanks,\nPriya",
-    boxLabel:'Forwarded email',
-    task:'Reply to Priya.', est:'~6 min', requiresResponse:true,
-    exampleResponse:"Hi Priya,\n\nThanks for checking in. The milestone date has shifted slightly — from 15 Oct to 22 Oct — due to a dependency on an upstream team that came in later than planned. The rest of the schedule is unaffected.\n\nHappy to walk through details if useful.\n\nRegards,\n[Name]",
-    scoringNote:"Score clarity, honesty about the slip, and whether a reason/next step is given — not exact wording."
+    id:'11', tag:'MANDATORY', tagColor:'var(--rust)', from:'Melissa Goh', subject:"Tomorrow's HR review \u2014 only 30 mins now", time:'10:40 AM',
+    body:"Hi,\n\nTomorrow's HR operations review has been shortened from an hour to 30 minutes.\n\nWe normally cover previous actions, HR metrics, open employee/onboarding issues, upcoming activities, improvement ideas and next actions.\n\nCould you propose a revised agenda so we use the 30 minutes well?\n\nThanks,\nMelissa",
+    box:"By the end, the team should be clear on:\n\u2022 issues requiring decisions;\n\u2022 upcoming risks/dependencies;\n\u2022 actions and owners.\n\nDetailed information can be circulated offline if discussion isn't required.",
+    boxLabel:'Purpose of the review',
+    task:'Draft a 30-minute agenda.', est:'~6 min', requiresResponse:true,
+    exampleResponse:"5 min \u2014 Previous actions + key HR metric exceptions\n10 min \u2014 Priority employee/onboarding issues requiring decisions\n7 min \u2014 Upcoming activities, risks and dependencies\n8 min \u2014 Decisions, owners and next actions\n\nDetailed metrics and improvement ideas can be circulated/followed up offline.",
+    scoringNote:'Other workable agendas that fit the 30-minute purpose are acceptable.'
   },
   {
-    id:'12', from:'Aina Yusuf', subject:'Which template should I use?', time:'10:08 AM',
-    body:"Hi,\n\nI'm preparing today's weekly update but I'm not sure which template I should use.\n\nI found Weekly_Update_v2, Weekly_Update_v3 and Weekly_Update_FINAL in the folder.\n\nDo you know which one is current?\n\nThanks,\nAina",
-    box:'Team notice: from October onward, please use Weekly_Update_v3.', boxLabel:'Reference',
+    id:'12', from:'Aina Yusuf', subject:'Which onboarding checklist should I use?', time:'10:42 AM',
+    body:"Hi,\n\nI'm preparing tomorrow's new-joiner files but I'm not sure which checklist is current.\n\nI found:\n\u2022 Onboarding_Checklist_v2\n\u2022 Onboarding_Checklist_v3\n\u2022 Onboarding_Checklist_FINAL\n\nDo you know which one I should use?\n\nThanks,\nAina",
+    box:'From October onward, use Onboarding_Checklist_v3.', boxLabel:'Team notice',
     suggested:'DO', alternative:'DELEGATE',
-    meaning:"Aina is currently blocked and the answer is quick. If another person owns the process, route her immediately rather than researching it yourself."
+    meaning:"Aina is currently preparing tomorrow's onboarding and the unblock is quick."
   },
   {
-    id:'13', from:'Farid Ismail', subject:'Development plan before tomorrow', time:'10:12 AM',
+    id:'13', from:'Farid Ismail', subject:'Development plan before tomorrow', time:'10:44 AM',
     body:"Hi,\n\nBefore our 1:1 tomorrow, please update your development plan with your priorities for the next quarter.\n\nI'd like us to use the updated version as the basis for our discussion.\n\nThanks,\nFarid",
     suggested:'DEFER',
-    meaning:"High importance, lower immediate urgency. This is exactly the kind of work that should be scheduled and protected, rather than repeatedly displaced until it becomes urgent."
+    meaning:"High importance but lower immediate urgency. Protect time for it."
   },
   {
-    id:'14', from:'Siti Aminah', subject:"Photos from Friday's Fruit Day \ud83c\udf4e", time:'10:20 AM',
+    id:'14', from:'Siti Aminah', subject:"Photos from Employee Appreciation Day \ud83c\udf89", time:'10:46 AM',
     body:"Hi everyone,\n\nThanks to everyone who joined us on Friday!\n\nWe've uploaded the photos here if you'd like to take a look.\n\nHave a great week!\n\nSiti",
     suggested:'DELETE',
-    meaning:"No required action and no meaningful consequence of waiting."
+    meaning:"No action and no meaningful consequence."
   },
   {
-    id:'15', tag:'MANDATORY', tagColor:'var(--rust)', from:'Jason Lim', subject:'Need your recommendation before 11am', time:'10:30 AM',
-    body:"Hi,\n\nFor next month's team meetings, I'm deciding whether we should keep the current weekly format or trial a shorter meeting with more follow-up done offline.\n\nI'd like your recommendation before my 11am discussion.\n\nPlease send me what you recommend and your main reasons. Keep it brief.\n\nThanks,\nJason",
-    box:"Current format: 45 min meeting, 91% average attendance, 68% found it useful, 5/week issues needing follow-up.\nShorter trial: 20 min meeting, 96% average attendance, 78% found it useful, 7/week issues needing follow-up.\n\nComments \u2014 current: \"Useful, but routine updates take too long.\" / \"We usually resolve the difficult issues in the room.\"\nComments \u2014 trial: \"Much easier to fit into the day.\" / \"Sometimes we stop just when the useful discussion starts.\"",
-    boxLabel:'Meeting trial results',
-    task:'Recommend: keep the current format, adopt the shorter format, or propose a modified approach \u2014 and explain why in \u226480 words.',
-    est:'~6 min', requiresResponse:true,
-    exampleResponse:"There deliberately isn't one correct answer. For example: trial a 30-minute format rather than adopting either option unchanged. The shorter trial improved attendance and perceived usefulness, but created more follow-up, suggesting 20 minutes may be too compressed. A 30-minute meeting focused on exceptions and issues requiring discussion could reduce meeting time while retaining enough space to resolve important matters.",
-    scoringNote:'Score the reasoning against the evidence, not which option they choose.'
+    id:'15', tag:'MANDATORY', tagColor:'var(--rust)', from:'Jason Lim', subject:'Need your recommendation before 11am', time:'10:48 AM',
+    body:"Hi,\n\nWe're reviewing the format of our monthly new-joiner orientation.\n\nWe recently trialled a shorter format and I need to decide what we should use next month.\n\nCould you review the results and send me your recommendation before my 11am discussion?\n\nKeep it brief.\n\nThanks,\nJason",
+    box:"Current: 3 hrs \u2014 full-session completion 92%, new joiners rating it useful 84%, avg. follow-up questions/group 4, managers saying joiners well prepared 87%\nShorter trial: 2 hrs \u2014 full-session completion 98%, new joiners rating it useful 88%, avg. follow-up questions/group 9, managers saying joiners well prepared 79%\n\nComments \u2014 Current: \u201cComprehensive, but quite long.\u201d / \u201cPeople lose energy toward the end.\u201d\nComments \u2014 Shorter: \u201cMuch easier to stay engaged.\u201d / \u201cSome practical questions only came up afterward.\u201d\n\nObjective: Keep orientation useful and manageable while ensuring employees are sufficiently prepared for their first week.",
+    boxLabel:'Orientation results',
+    task:'Recommend Current / Shorter / Modified approach, with 80 words or fewer of reasoning.', est:'~6 min', requiresResponse:true,
+    exampleResponse:"I recommend trialling a modified format between the two, rather than adopting the two-hour version unchanged. The shorter trial improved completion and participant ratings, but follow-up questions increased and managers reported lower preparedness. A shorter core orientation with protected time for practical questions could retain engagement while addressing the readiness gap.",
+    scoringNote:'Other evidence-based recommendations are valid \u2014 score the reasoning against the evidence, not which option is chosen.'
   },
   {
-    id:'16', from:'Nadia Rahman', subject:'Approval needed — meeting supplies', time:'10:35 AM',
-    body:"Hi,\n\nCould you approve this purchase for tomorrow's workshop by 2pm so I can place the order today?\n\nWe need 2 portable whiteboards at RM180 each.\n\nThe remaining budget for workshop supplies is RM300.\n\nThanks,\nNadia",
-    box:'Requested: 2 \u00d7 RM180 = RM360\nRemaining budget: RM300', boxLabel:'Budget',
-    suggested:'DELEGATE / RETURN',
-    meaning:"The RM360 request exceeds the RM300 available budget, so it can't appropriately be approved as submitted. Return it to the requester to revise or clarify."
+    id:'16', from:'Nadia Rahman', subject:'Approval needed \u2014 onboarding materials', time:'10:50 AM',
+    body:"Hi,\n\nCould you approve this purchase by 2pm so I can place the order today?\n\nWe need 20 onboarding folders at RM18 each.\n\nThe remaining budget for onboarding materials is RM300.\n\nThanks,\nNadia",
+    box:'Requested: 20 \u00d7 RM18 = RM360\nRemaining budget: RM300', boxLabel:'Budget',
+    suggested:'DELEGATE', alternative:'RETURN',
+    meaning:"RM360 exceeds the available RM300. It cannot appropriately be approved as submitted; return it for revision or clarification."
   },
   {
-    id:'17', from:'Marcus Chen', subject:'Quick favour before 11?', time:'10:40 AM',
-    body:"Hi,\n\nCould you take a quick look at my four slides before my 11am meeting?\n\nI mainly need a second pair of eyes on the wording and flow. If possible, could you send me any comments by 10:50?\n\nShouldn't take more than 10 minutes.\n\nThanks \u2014 really appreciate it.\nMarcus",
-    boxLabel:'Attachment', box:'Project_Update.pptx',
+    id:'17', from:'Marcus Chen', subject:'Quick favour before 11?', time:'10:52 AM',
+    body:"Hi,\n\nCould you take a quick look at my four slides for the manager briefing before my 11am meeting?\n\nI mainly need a second pair of eyes on the wording and flow. If possible, could you send comments by 10:50?\n\nShouldn't take more than 10 minutes.\n\nThanks \u2014 really appreciate it.\nMarcus",
+    box:'Manager_Briefing.pptx', boxLabel:'Attachment',
     suggested:'DEFER / decline', alternative:'DELEGATE',
-    meaning:"The consequence is soon, but it primarily affects Marcus and is relatively limited compared with higher-impact work. His urgency doesn't automatically become yours."
+    meaning:"The consequence is soon, but relatively limited and primarily belongs to Marcus. Someone else's urgency doesn't automatically become yours."
   },
   {
-    id:'18', from:'Elaine Ho', subject:'Reminder — weekly report due tomorrow', time:'10:45 AM',
-    body:"Hi,\n\nJust a reminder that your weekly report is due tomorrow at 12pm.\n\nPlease submit the completed version through the usual folder.\n\nThanks,\nElaine",
+    id:'18', from:'Elaine Ho', subject:'Reminder \u2014 training attendance report due tomorrow', time:'10:54 AM',
+    body:"Hi,\n\nJust a reminder that the monthly training attendance report is due tomorrow at 12pm.\n\nPlease submit the completed version through the usual folder.\n\nThanks,\nElaine",
     suggested:'DEFER',
-    meaning:"Important recurring work, but the consequence is later. Schedule it before it becomes tomorrow's emergency."
+    meaning:"Important recurring work, but the consequence occurs later. Schedule it before it becomes urgent."
   },
   {
-    id:'19', tag:'MANDATORY', tagColor:'var(--rust)', from:'Farid Ismail', subject:'Can you handle this?', time:'10:50 AM',
+    id:'19', tag:'MANDATORY', tagColor:'var(--rust)', from:'Farid Ismail', subject:'Can you handle this?', time:'10:56 AM',
     body:"Hi,\n\nRachel sent me the email below. I'm tied up at the moment.\n\nCould you reply to her directly? We need to address the concern and agree what happens next.\n\nThanks,\nFarid",
-    box:"FROM Rachel Ong\nSUBJECT Late inputs\n\nHi Farid,\n\nWe've received your team's input late three times this month, including yesterday. It's affecting our preparation.\n\nWe need tomorrow's input by 10am. Can you confirm whether your team can meet that, and what we should expect going forward?\n\nThanks,\nRachel",
+    box:"FROM Rachel Ong\nSUBJECT Late onboarding information\n\nHi Farid,\n\nWe've received the new-joiner information from HR late three times this month, including yesterday. It's affecting our preparation for their first day.\n\nWe have another employee starting tomorrow and need the information by 10am today.\n\nCan you confirm whether we'll receive it on time and what we should expect going forward?\n\nThanks,\nRachel",
     boxLabel:'Forwarded email',
     task:'Reply to Rachel.', est:'~7 min', requiresResponse:true,
-    exampleResponse:"Hi Rachel,\n\nThanks for raising this. We recognise that several inputs this month, including yesterday's, were later than agreed and affected your team's preparation.\n\nWe can confirm tomorrow's input will be sent by 9:30am. Going forward, we'll also run an internal readiness check at 9:00am so that any missing information or potential delay is identified earlier.\n\nRegards,\n[Name]",
+    exampleResponse:"Hi Rachel,\n\nThanks for raising this. We recognise that several onboarding submissions this month, including yesterday's, were later than agreed and affected your team's preparation.\n\nTomorrow's information will be sent by 9:30am. Going forward, we'll also run a 9:00am readiness check so any missing information or potential delay is identified earlier.\n\nRegards,\n[Name]",
     scoringNote:'Score judgement and accountability rather than exact wording.'
   },
   {
-    id:'20', from:'Sarah Lee', subject:'UPDATE — Customer review brought forward', time:'11:00 AM',
-    body:"Hi,\n\nQuick update \u2014 the customer review has been brought forward to 11:15am.\n\nIf you have comments on the feedback summary I sent earlier, I now need them by 10:55am so I can consolidate everything beforehand.\n\nSorry for the short notice.\n\nThanks,\nSarah",
+    id:'20', from:'Sarah Lee', subject:'UPDATE \u2014 Manager review brought forward', time:'10:58 AM',
+    body:"Hi,\n\nQuick update \u2014 the manager review has been brought forward to 11:15am.\n\nIf you have comments on the onboarding feedback I sent earlier, I now need them by 10:55am so I can consolidate everything beforehand.\n\nSorry for the short notice.\n\nThanks,\nSarah",
     suggested:'DO', alternative:'DELEGATE',
-    meaning:"The importance hasn't fundamentally changed, but urgency has. The consequence of waiting now occurs much sooner. Act on it or immediately route it to an appropriate contributor."
+    meaning:"The work itself hasn't become more important; the consequence of waiting now occurs much sooner. Reassess email 10 rather than blindly sticking with the original Defer call."
   }
 ];
 
@@ -540,9 +548,19 @@ function masthead(sub){
     (state.teamCode ? '<div class="team-chip">'+esc(state.teamCode)+'</div>' : '') + '</div>';
 }
 
+function roleBriefHTML(){
+  return '<div class="landing-card">' +
+    '<p style="margin-bottom:8px;"><b>You are an '+esc(ROLE_BRIEF.role)+'</b></p>' +
+    '<p style="margin-bottom:8px;"><b>Your scope:</b> '+esc(ROLE_BRIEF.scope)+'</p>' +
+    '<p style="margin-bottom:8px;"><b>Out of your scope:</b> '+esc(ROLE_BRIEF.outOfScope)+'</p>' +
+    '<p>'+esc(ROLE_BRIEF.context)+'</p>' +
+  '</div>';
+}
+
 function landingHTML(){
   var prefill = getHashCode() || '';
   return masthead('Triage simulation') +
+    roleBriefHTML() +
     '<div class="landing-card">' +
       '<p>Your mailbox fills up in batches. For each email that lands, make the call: <b>Delete</b>, <b>Delegate</b>, <b>Do</b>, or <b>Defer</b>. The next batch arrives once you\u2019ve handled every email currently in your inbox.</p>' +
       '<p>Only emails that require a written response will ask you to type something \u2014 otherwise, just make your call and move on.</p>' +
@@ -552,6 +570,9 @@ function landingHTML(){
     '<div class="stack"><button class="btn" id="btn-start">Open your mailbox</button></div>' +
     '<div class="link-row">' +
       '<span class="subtle-link" id="btn-review">View all teams\u2019 results</span>' +
+    '</div>' +
+    '<div class="link-row">' +
+      '<span class="subtle-link" id="btn-skip-warmup">Skip Round 1 \u2192 go straight to the main round</span>' +
     '</div>';
 }
 
@@ -795,7 +816,15 @@ function bindEvents(){
       var input = document.getElementById('team-name-input');
       var name = input ? input.value.trim() : '';
       if(!name){ alert('Please enter a team name.'); return; }
-      startOrResumeTeam(name);
+      startOrResumeTeam(name, false);
+    };
+  }
+  if(el = document.getElementById('btn-skip-warmup')){
+    el.onclick = function(){
+      var input = document.getElementById('team-name-input');
+      var name = input ? input.value.trim() : '';
+      if(!name){ alert('Please enter a team name.'); return; }
+      startOrResumeTeam(name, true);
     };
   }
   if(el = document.getElementById('btn-review')){
@@ -890,11 +919,11 @@ function saveCurrentResponse(){
   if(ta) state.answers[e.id].response = ta.value;
 }
 
-async function startOrResumeTeam(name){
+async function startOrResumeTeam(name, skipWarmup){
   state.teamCode = name;
   setHashCode(name);
   state.answers = {};
-  state.round = 'warmup';
+  state.round = skipWarmup ? 'main' : 'warmup';
   state.warmupUnlocked = WARMUP_BATCH_SIZES[0];
   state.mainUnlocked = BATCH_SIZES[0];
   state.screen = 'inbox';
@@ -904,7 +933,7 @@ async function startOrResumeTeam(name){
       if(snap.exists()){
         var data = snap.data();
         state.answers = data.answers || {};
-        state.round = data.round || 'warmup';
+        state.round = data.round || (skipWarmup ? 'main' : 'warmup');
         state.warmupUnlocked = data.warmupUnlocked || WARMUP_BATCH_SIZES[0];
         state.mainUnlocked = data.mainUnlocked || BATCH_SIZES[0];
         if(state.round === 'warmup'){
@@ -917,6 +946,7 @@ async function startOrResumeTeam(name){
       }
     }catch(e){ console.error('resume failed', e); }
   }
+  saveSubmission();
   render();
 }
 
